@@ -43,15 +43,7 @@ export default class SignUp extends Component {
                     { required: true, message: "Please input your username!" },
                   ]}
                 >
-                  <Input placeholder="UserName" />
-                </Form.Item>
-                <Form.Item
-                  name="UserName"
-                  rules={[
-                    { required: true, message: "Please input your UserName!" },
-                  ]}
-                >
-                  <Input placeholder="LastName" />
+                  <Input placeholder="UserName" type="texte" />
                 </Form.Item>
                 <Form.Item
                   name="LastName"
@@ -59,12 +51,19 @@ export default class SignUp extends Component {
                     { required: true, message: "Please input your LastName!" },
                   ]}
                 >
-                  <Input placeholder="email" />
+                  <Input placeholder="LastName" type="texte" />
+                </Form.Item>
+                <Form.Item
+                  name="email"
+                  rules={[
+                    { required: true, message: "Please input your LastName!" },
+                  ]}
+                >
+                  <Input placeholder="email" type="email" />
                 </Form.Item>
 
                 <Form.Item
                   name="Contact_number"
-                  type="number"
                   rules={[
                     {
                       required: true,
@@ -72,11 +71,10 @@ export default class SignUp extends Component {
                     },
                   ]}
                 >
-                  <Input placeholder="Contact_number" />
+                  <Input placeholder="Contact_number" type="tel" />
                 </Form.Item>
                 <Form.Item
                   name="Nationality"
-                  type="texte"
                   rules={[
                     {
                       required: true,
@@ -84,7 +82,7 @@ export default class SignUp extends Component {
                     },
                   ]}
                 >
-                  <Input placeholder="Nationality" />
+                  <Input placeholder="Nationality" type="texte" />
                 </Form.Item>
                 <Form.Item
                   name="Date_of_birth"
@@ -96,7 +94,7 @@ export default class SignUp extends Component {
                     },
                   ]}
                 >
-                  <Input placeholder="Date_of_birth" />
+                  <Input placeholder="Date_of_birth" type="date" />
                 </Form.Item>
                 <Form.Item name="remember" valuePropName="checked">
                   <Checkbox>

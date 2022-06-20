@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
-import logo from "../../assets/images/y.png";
+import logo from "../../assets/images/z.png";
 
 function Sidenav({ color }) {
   const { pathname } = useLocation();
@@ -133,7 +133,7 @@ function Sidenav({ color }) {
   return (
     <>
       <div className="brand">
-        <img src={logo} alt="" style={{ width: "65px", height: "85" }} />
+        <img src={logo} alt="" style={{ width: "95px", height: "115" }} />
         <h1>interface Admin </h1>
       </div>
 
@@ -166,7 +166,7 @@ function Sidenav({ color }) {
           </NavLink>
         </Menu.Item>
         <Menu.Item key="1">
-          <NavLink to="/dashboard">
+          <NavLink to="/sign-up">
             <span
               className="icon"
               style={{

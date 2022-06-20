@@ -267,7 +267,7 @@ function Header({
         </Col>
         <Col span={24} md={18} className="header-control">
           <Space size="middle" direction="horizontal">
-          <Button
+            <Button
               type="link"
               className="sidebar-toggler"
               onClick={() => onPress()}
@@ -287,7 +287,6 @@ function Header({
             <Button type="link" onClick={showDrawer}>
               {logsetting}
             </Button>
-     
           </Space>
           <Drawer
             className="settings-drawer"

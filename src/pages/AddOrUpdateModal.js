@@ -12,31 +12,58 @@ const AddOrUpdateModal = (props) => {
     <Form form={form} onFinish={handleonfinish}>
       <div className="site-card-border-less-wrapper">
         <Modal
-          title="Add "
+          title="Add_Update "
           centered
           visible={visible}
           onOk={() => handleAddOrUpdate()}
           onCancel={onCancel}
         >
-          <Card>
-            <Form.Item name="nameoffield" label="UserName">
+          <Card
+            style={{
+              width: "90%",
+              height: "80%",
+              backgroundColor: "ButtonHighlight",
+            }}
+          >
+            <Form.Item name="texte" label="UserName">
               <Input />
             </Form.Item>
-            <Form.Item name="nameoffield" label="LastName">
+            <Form.Item name="texte" label="LastName">
               <Input />
             </Form.Item>
-            <Form.Item name="nameoffield" label="email">
+            <Form.Item name="phone" label="Num_phone">
               <Input />
             </Form.Item>
-            <Form.Item name="nameoffield" label="phone">
+            <Form.Item name="email" label="User_Email">
               <Input />
             </Form.Item>
-            <Form.Item name="nameoffield" label="password">
+            <Form.Item name="password" label="Password">
               <Input />
             </Form.Item>
             <Radio.Group defaultValue="a">
-              <Radio.Button value="Markiting">Markiting</Radio.Button>
-              <Radio.Button value="Analyste">Analyste </Radio.Button>
+              <Radio.Button
+                value="Markiting"
+                style={{
+                  backgroundColor: "Bisque",
+                  color: "black",
+                  fontSize: "20px",
+                  TextAlign: "center",
+                  border: "ridge ",
+                }}
+              >
+                Markiting
+              </Radio.Button>
+              <Radio.Button
+                value="Analyste"
+                style={{
+                  backgroundColor: "Bisque",
+                  color: "black",
+                  fontSize: "20px",
+                  border: "ridge ",
+                }}
+              >
+                Analyste{" "}
+              </Radio.Button>
             </Radio.Group>
           </Card>
         </Modal>
