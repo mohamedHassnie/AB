@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   Layout,
   Button,
@@ -11,6 +12,7 @@ import {
   Switch,
   notification,
 } from "antd";
+import { isAuthenticated, setAuthentication } from "../helpers/auth";
 
 import signinbg from "../assets/images/SGimg.svg";
 import axios from "axios";
@@ -26,7 +28,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const hist = useHistory();
 
-  const onFinish = async (values) => {
+  const onFinish = async (e) => {
     const data = {
       email: email,
       password: password,
@@ -38,23 +40,12 @@ const SignIn = () => {
     };
 
     await axios
-      .post("http://localhost:6000/api/login", data, config)
+      .post("http://localhost:3010/api/login", data, config)
       .then((response) => {
+        console.log("hetha houwa", response);
+        setAuthentication(response.data.token, response.data.user);
         hist.push("/dashboard");
-        if (response.token.role === "admin") {
-          localStorage.setItem("accessToken", JSON.stringify(response.token));
-          hist.push("/dashboard");
-        }
-
-        if (response.token.role === "analyste") {
-          localStorage.setItem("accessToken", JSON.stringify(response.token));
-          hist.push("/dashboard");
-        }
-
-        if (response.token.role === "markiting") {
-          localStorage.setItem("accessToken", JSON.stringify(response.token));
-          hist.push("/dashboard");
-        }
+        notification.success({ message: response.data.message });
       })
       .catch(() => {
         notification.error({ message: "check your Email or Password" });
@@ -95,7 +86,12 @@ const SignIn = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Email" name="email" type="email" />
+                  <Input
+                    placeholder="Email"
+                    name="email"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </Form.Item>
 
                 <Form.Item
@@ -112,6 +108,7 @@ const SignIn = () => {
                     placeholder="Password"
                     name="password"
                     type="password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </Form.Item>
 

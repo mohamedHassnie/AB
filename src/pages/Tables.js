@@ -16,6 +16,7 @@ import {
   Modal,
   Form,
   Input,
+  notification,
 } from "antd";
 
 // Images
@@ -32,304 +33,113 @@ import {
   CloseCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useForm } from "antd/lib/form/Form";
 import AddOrUpdateModal from "./AddOrUpdateModal";
 
 const { Title } = Typography;
-
-const formProps = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
-const data = [
-  {
-    key: "1",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face2}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Michael John</Title>
-            <p>michael@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Manager</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<SyncOutlined spin />} color="processing">
-        processing
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/04/18</span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "2",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face3}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Alexa Liras</Title>
-            <p>alexa@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Programator</Title>
-          <p>Developer</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<CheckCircleOutlined />} color="success">
-        Active
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/12/20</span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "3",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Laure Perrier</Title>
-            <p>laure@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Executive</Title>
-          <p>Projects</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<SyncOutlined spin />} color="processing">
-        processing
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>03/04/21</span>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "4",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face4}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Miriam Eric</Title>
-            <p>miriam@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Marketing</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<CheckCircleOutlined />} color="success">
-        Active
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>03/04/21</span>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "5",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face5}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>Richard Gran</Title>
-            <p>richard@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Manager</Title>
-          <p>Organization</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<CloseCircleOutlined />} color="error">
-        Blocked
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>23/03/20</span>
-        </div>
-      </>
-    ),
-  },
-
-  {
-    key: "6",
-    name: (
-      <>
-        <Avatar.Group>
-          <Avatar
-            className="shape-avatar"
-            shape="square"
-            size={40}
-            src={face6}
-          ></Avatar>
-          <div className="avatar-info">
-            <Title level={5}>John Levi</Title>
-            <p>john@mail.com</p>
-          </div>
-        </Avatar.Group>{" "}
-      </>
-    ),
-    function: (
-      <>
-        <div className="author-info">
-          <Title level={5}>Tester</Title>
-          <p>Developer</p>
-        </div>
-      </>
-    ),
-
-    status: (
-      <Tag icon={<CloseCircleOutlined />} color="error">
-        Blocked
-      </Tag>
-    ),
-    employed: (
-      <>
-        <div className="ant-employed">
-          <span>14/04/17</span>
-        </div>
-      </>
-    ),
-  },
-];
-
 function Tables() {
-  const onChange = (e) => console.log(`radio checked:${e.target.value}`);
   const [visible, setVisible] = useState(false);
   const [visibleE, setVisibleE] = useState(false);
+  const [data, setdata] = useState([]);
+  const [role, setRole] = useState([]);
   const { form } = useForm();
+  const hist = useHistory();
   const columns = [
     {
-      title: "UseName",
-      dataIndex: "name",
+      title: "Name",
+      dataIndex: "UserName",
       key: "name",
-      width: "32%",
+      render: (val, record) => {
+        return (
+          <Avatar.Group>
+            <Avatar
+              className="shape-avatar"
+              shape="square"
+              size={40}
+              src={record.img} //image like DB 'img'
+            ></Avatar>
+            <div className="avatar-info">
+              <Title level={5}>{val}</Title>
+              <p>{record.email}</p>
+            </div>
+          </Avatar.Group>
+        );
+      },
+      width: "20%",
     },
     {
-      title: "FUNCTION",
-      dataIndex: "function",
-      key: "function",
+      title: "LastName",
+      dataIndex: "LastName",
+      key: "LastName",
+      render: (val, record) => {
+        return (
+          <Avatar.Group>
+            <Avatar
+              className="shape-avatar"
+              shape="square"
+              size={40}
+              src={record.img} //image like DB 'img'
+            ></Avatar>
+            <div className="avatar-info">
+              <Title level={5}>{val}</Title>
+              <p>{record.email}</p>
+            </div>
+          </Avatar.Group>
+        );
+      },
+      width: "20%",
+    },
+    {
+      title: "Mobile",
+      dataIndex: "Contact_number",
+      key: "Contact_number",
+      render: (val, record) => {
+        return (
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+            <p>{record.org}</p>
+          </div>
+        );
+      },
+      width: "20%",
+    },
+    {
+      title: "role",
+      dataIndex: "role",
+      render: (val, record) => {
+        return (
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+            <p>{record.org}</p>
+            {/* check whatever we want to add there */}
+          </div>
+        );
+      },
+      width: "20%",
     },
 
     {
-      title: "STATUS",
+      title: "Status",
       key: "status",
       dataIndex: "status",
+      render: (val, record) => {
+        return val === "BLOCKED" ? (
+          <Tag icon={<CloseCircleOutlined />} color="error">
+            {val}
+            {/* check API status when comparing the status VALID,BLOCKED....!!! */}
+          </Tag>
+        ) : (
+          <Tag icon={<CheckCircleOutlined />} color="success">
+            {val}
+          </Tag>
+        );
+      },
+      width: "20%",
     },
-    {
-      title: "EMPLOYED",
-      key: "employed",
-      dataIndex: "employed",
-    },
+
     {
       title: "Action",
       dataIndex: "Action",
@@ -354,11 +164,51 @@ function Tables() {
       },
     },
   ];
-  const handleUpdate = () => {
-    //todo
+  useEffect(() => {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+    console.log(role);
+
+    fetch("http://localhost:3010/api/getUserByRole", {
+      Method: "GET",
+      Headers: {
+        Accept: "application.json",
+        "Content-Type": "application/json",
+      },
+      Body: { role: role },
+      Cache: "default",
+    })
+      .then((res) => {
+        setdata(res.data);
+        console.log(res.data, "analysta w makiting w all");
+      })
+      .catch(() => {
+        notification.error({ message: " No user is found " });
+      });
+  }, [role]);
+
+  const handleUpdate = async (id) => {
+    await axios
+      .delete("http://localhost:3010/api/UpdateUser/:id" + id)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   };
-  const handleAdd = () => {
-    //todo
+  const handleAdd = async (id) => {
+    await axios
+      .delete("http://localhost:3010/api/deleteUser/:_id" + id)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   };
   return (
     <Form form={form}>
@@ -371,10 +221,21 @@ function Tables() {
               title="List Of Users"
               extra={
                 <Space size="middle" direction="horizontal">
-                  <Radio.Group onChange={onChange} defaultValue="a">
-                    <Radio.Button value="All">All</Radio.Button>
-                    <Radio.Button value="Markiting">Markiting</Radio.Button>
-                    <Radio.Button value="Analyste">Analyste </Radio.Button>
+                  <Radio.Group
+                    onChange={(e) => {
+                      setRole(e.target.value);
+                      console.log("aaaa", e);
+                    }}
+                  >
+                    <Radio.Button value="All" name="role">
+                      All
+                    </Radio.Button>
+                    <Radio.Button value="Markiting" name="role">
+                      Markiting
+                    </Radio.Button>
+                    <Radio.Button value="Analyste" name="role">
+                      Analyste
+                    </Radio.Button>
                   </Radio.Group>
                   <Tooltip title="Add">
                     <Button

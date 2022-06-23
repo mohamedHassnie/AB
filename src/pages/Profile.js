@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -96,7 +95,10 @@ function Profile() {
   const handleonfinish = (values) => {
     //todo
   };
-  
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    setuser(JSON.parse(localStorage.getItem("user")));
+  }, []);
   return (
     <Form form={form} onFinish={handleonfinish}>
       <div
@@ -114,8 +116,8 @@ function Profile() {
                 <Avatar size={74} shape="square" src={profilavatar} />
 
                 <div className="avatar-info">
-                  <h4 className="font-semibold m-0">Sarah Jacob</h4>
-                  <p>Admin</p>
+                  <h4 className="font-semibold m-0">{user.UserName}</h4>
+                  <p>{user.role}</p>
                 </div>
               </Avatar.Group>
             </Col>
@@ -139,7 +141,9 @@ function Profile() {
                   type="link"
                   htmlType="submit"
                   icon={<SaveOutlined />}
-                  onClick={(val) => {setEditable(!Editable)}}
+                  onClick={(val) => {
+                    setEditable(!Editable);
+                  }}
                   size="large"
                 ></Button>
               )
@@ -149,7 +153,10 @@ function Profile() {
             <Descriptions title="Oliver Liam">
               <Descriptions.Item label="Full Name" span={3}>
                 {!Editable ? (
-                  <>Sarah Emily Jacob</>
+                  <>
+                    {user.UserName}
+                    {user.LastName}
+                  </>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
@@ -158,7 +165,7 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Mobile" span={3}>
                 {!Editable ? (
-                  <> (44) 123 1234 123</>
+                  <> {user.phone}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
@@ -167,7 +174,7 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Email" span={3}>
                 {!Editable ? (
-                  <> sarahjacob@mail.com</>
+                  <> {user.email}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
@@ -176,7 +183,7 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Location" span={3}>
                 {!Editable ? (
-                  <> USA</>
+                  <> {user.location}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />

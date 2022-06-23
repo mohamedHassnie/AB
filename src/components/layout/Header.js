@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { logout } from "../../helpers/auth";
 import {
   Row,
   Col,
@@ -168,7 +168,7 @@ const menu = (
     </Menu.Item>
     <Menu.Item key="2">
       <Link to="/sign-in" className="btn-sign-in">
-        Logout
+        logout
       </Link>
     </Menu.Item>
   </Menu>
@@ -176,8 +176,8 @@ const menu = (
 
 const logsetting = [
   <svg
-    width="20"
-    height="20"
+    width="30"
+    height="30"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -194,8 +194,8 @@ const logsetting = [
 
 const toggler = [
   <svg
-    width="20"
-    height="20"
+    width="30"
+    height="30"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 448 512"
     key={0}
@@ -235,9 +235,13 @@ function Header({
 
   const [visible, setVisible] = useState(false);
   const [sidenavType, setSidenavType] = useState("transparent");
+  const [user, setuser] = useState({});
 
-  useEffect(() => window.scrollTo(0, 0));
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setuser(JSON.parse(localStorage.getItem("user")));
+  }, []);
+  console.log(user, "ici user");
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
 
@@ -281,7 +285,7 @@ function Header({
                 onClick={(e) => e.preventDefault()}
               >
                 {profile}
-                <span>My name</span>
+                <span>{user.UserName}</span>
               </a>
             </Dropdown>
             <Button type="link" onClick={showDrawer}>
