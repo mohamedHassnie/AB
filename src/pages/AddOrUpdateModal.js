@@ -1,10 +1,11 @@
-import { Card, Form, Input, Modal } from "antd";
+import { Card, Form, Input, Modal, Select } from "antd";
 import { useForm } from "antd/lib/form/Form";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { notification } from "antd";
 import Creatable from "react-select/creatable";
 
 import axios from "axios";
+const { Option } = Select;
 const AddOrUpdateModal = (props) => {
   const customStyles = {
     option: (provided, state) => ({
@@ -16,52 +17,56 @@ const AddOrUpdateModal = (props) => {
   };
   const { visible, handleAddOrUpdate, onCancel, type, data } = props;
   const roles = [
-    { label: "markiting", value: 1 },
+    { label: "makiting", value: 1 },
     { label: "analyste", value: 2 },
   ];
-  const [Name, setUserName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [Contact_number, setContact_number] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { form } = useForm();
-  const [roleValue, setRoleValue] = useState("");
+  const [form] = useForm();
 
-  const handleChange = (field, value) => {
-    switch (field) {
-      case "roles":
-        setRoleValue(value);
-        break;
-      default:
-        break;
-    }
-  };
+  useEffect(() => {
+    console.log("teswttt", props.record);
 
-  const handleonfinish = async (e) => {
-    e.preventDefault();
+    form.setFieldsValue({ ...props.record, password: "" });
+  }, [form, props.record, props.visible]);
 
+  const handleonfinish = async (val) => {
     const config = {
       headers: {
         "content-type": "application/json",
       },
     };
-    const data = {
-      UserName: Name,
-      LastName: LastName,
-      Contact_number: Contact_number,
-      email: email,
-      password: password,
-      role: roleValue,
-    };
-    await axios
-      .post("http://localhost:3010/api/addUser", data, config)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        notification.error({ message: "check " });
-        console.log(err);
-      });
+
+    if (props.type === "ADD") {
+      const values = { ...val, role: form.getFieldValue("role") };
+
+      await axios
+        .post("http://localhost:3010/api/addUser", values, config)
+        .then((response) => {
+          notification.success({ message: "Done  " });
+          onCancel();
+        })
+        .catch((err) => {
+          notification.error({ message: "check your Data " });
+
+          onCancel();
+        });
+    } else {
+      const values = {
+        ...val,
+        role: form.getFieldValue("role"),
+        _id: props.record._id,
+      };
+
+      await axios
+        .put("http://localhost:3010/api/UpdateUser/" + values._id, values)
+        .then(function (response) {
+          notification.success({ message: "Update Done  " });
+          onCancel();
+        })
+        .catch(function (err) {
+          notification.error({ message: "check your Data " });
+          onCancel();
+        });
+    }
   };
 
   return (
@@ -71,60 +76,49 @@ const AddOrUpdateModal = (props) => {
           title="Add_Update"
           centered
           visible={visible}
-          onOk={() => handleAddOrUpdate()}
+          onOk={() => {
+            form.submit();
+          }}
           onCancel={onCancel}
         >
           <Card
             centered
             style={{
-              width: "90%",
-              height: "80%",
+              width: "100%",
+              height: "100%",
             }}
           >
-            <Form.Item name="Name">
-              <Input
-                placeholder="Name"
-                type="texte"
-                onChange={(e) => setUserName(e.target.value)}
-              />
+            <Form.Item name="UserName">
+              <Input placeholder="Name" type="texte" />
             </Form.Item>
             <Form.Item name="LastName">
-              <Input
-                placeholder="LastName"
-                type="texte"
-                onChange={(e) => setLastName(e.target.value)}
-              />
+              <Input placeholder="LastName" type="texte" />
             </Form.Item>
-            <Form.Item name="Contact_number">
-              <Input
-                placeholder="phone"
-                type="tel"
-                onChange={(e) => setContact_number(e.target.value)}
-              />
+            <Form.Item name="phone">
+              <Input placeholder="phone" type="tel" />
+            </Form.Item>
+            <Form.Item name="location">
+              <Input placeholder="location" type="texte" />
             </Form.Item>
             <Form.Item name="email">
-              <Input
-                placeholder="email"
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Input placeholder="email" type="email" />
             </Form.Item>
             <Form.Item name="password">
-              <Input
-                placeholder="password"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <Input placeholder="password" type="password" />
             </Form.Item>
 
-            <Form.Item>
-              <Creatable
-                isClearable
-                onChange={(value) => handleChange("roles", value)}
-                options={roles}
-                value={roleValue}
-                styles={customStyles}
-              />
+            <Form.Item shouldUpdate>
+              {({ getFieldValue }) => (
+                <Select
+                  value={getFieldValue("role")}
+                  onChange={(e) => {
+                    form.setFieldsValue({ role: e });
+                  }}
+                >
+                  <Option value="makiting">Marketing</Option>
+                  <Option value="analysta">Analyste</Option>
+                </Select>
+              )}
             </Form.Item>
           </Card>
         </Modal>

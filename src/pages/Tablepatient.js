@@ -28,11 +28,14 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   PlusOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 const { Title } = Typography;
 function Tablepatient() {
   const [data, setdata] = useState([]);
   const [user, setUser] = useState([]);
+  const [key, setKey] = useState("");
+
   const { form } = useForm();
   const hist = useHistory();
   const columns = [
@@ -63,6 +66,20 @@ function Tablepatient() {
       },
       width: "20%",
     },
+
+    {
+      title: "location",
+      dataIndex: "location",
+      key: "location",
+      render: (val) => {
+        return (
+          <div className="avatar-info">
+            <Title level={5}>{val}</Title>
+          </div>
+        );
+      },
+      width: "20%",
+    },
     {
       title: "email",
       dataIndex: "email",
@@ -78,8 +95,8 @@ function Tablepatient() {
     },
     {
       title: "Mobile",
-      dataIndex: "Contact_number",
-      key: "Contact_number",
+      dataIndex: "phone",
+      key: "phone",
       render: (val) => {
         return (
           <div className="author-info">
@@ -138,6 +155,7 @@ function Tablepatient() {
       },
     },
   ];
+
   useEffect(() => {
     const config = {
       headers: {
@@ -153,21 +171,11 @@ function Tablepatient() {
       .catch(() => {
         notification.error({ message: " No user is found " });
       });
-  }, [hist]);
+  }, []);
 
   const handleUpdate = async (id) => {
     await axios
-      .delete(`http://localhost:3010/api/updatepatient/:_id/${id}`)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
-  const handleDelete = async (id) => {
-    await axios
-      .delete(`http://localhost:3010/api/deletePatient/:_id /${id}`)
+      .delete(`http://localhost:3010/api/updatepatient/${id}`)
       .then(function (response) {
         console.log(response);
       })
@@ -176,38 +184,63 @@ function Tablepatient() {
       });
   };
 
-  const handleSearch = async (event) => {
-    let key = event.target.value;
-    if (key) {
-      let resultat = await fetch(`http://localhost:3010/api/search/${key}`);
-      resultat = await resultat.json();
-      if (resultat) {
-        setUser(resultat);
-      }
-    } else {
-      Notification({ message: "user undifined" });
+  const handleDelete = async (id) => {
+    await axios
+      .delete(`http://localhost:3010/api/deletePatient/${id}`)
+      .then(function (response) {
+        axios
+          .get("http://localhost:3010/api/getPatient")
+          .then((res) => {
+            setdata(res.data);
+          })
+          .catch(() => {
+            notification.error({ message: " No user is found " });
+          });
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  };
+
+  const handleSearch = async () => {
+    let resultat = await fetch(
+      `http://localhost:3010/api/searchPatient/${key}`
+    );
+    resultat = await resultat.json();
+    if (resultat) {
+      setdata(resultat);
     }
   };
   return (
     <div className="tabled">
       <Card>
-        <Row gutter={[24, 0]}>
-          <Table
-            subHeader
-            subHeaderComponent={
-              <input
-                type="text"
-                placeholder="search here"
-                onChange={handleSearch}
-              />
-            }
-            columns={columns}
-            dataSource={data}
-            pagination
-            fixedHeader
-            fixedHeaderScrollHeight="400px"
-            rowSelection={{ type: "checkbox" }}
-          />
+        <Row justify="end" gutter={14} style={{ margin: "10px" }}>
+          <Col span={4}>
+            <Input
+              style={{ width: "90%" }}
+              onChange={(e) => {
+                setKey(e.target.value);
+              }}
+            />
+          </Col>
+          <Col span={2}>
+            <Button
+              icon={<SearchOutlined />}
+              type="primary"
+              onClick={handleSearch}
+            >
+              Search
+            </Button>
+          </Col>
+        </Row>
+        <Row style={{ width: "90%", border: "1px " }}>
+          <Col span={24}>
+            <Table
+              columns={columns}
+              dataSource={data}
+              pagination={{ responsive: true }}
+            />
+          </Col>
         </Row>
       </Card>
     </div>

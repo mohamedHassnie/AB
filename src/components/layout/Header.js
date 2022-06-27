@@ -127,6 +127,8 @@ const clockicon = [
     ></path>
   </svg>,
 ];
+
+
 const profile = [
   <svg
     width="20"
@@ -144,6 +146,8 @@ const profile = [
     ></path>
   </svg>,
 ];
+
+
 const data = [
   {
     title: "New message from Sophie",
@@ -237,10 +241,14 @@ function Header({
   const [sidenavType, setSidenavType] = useState("transparent");
   const [user, setuser] = useState({});
 
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setuser(JSON.parse(localStorage.getItem("user")));
   }, []);
+
+
   console.log(user, "ici user");
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
@@ -285,7 +293,7 @@ function Header({
                 onClick={(e) => e.preventDefault()}
               >
                 {profile}
-                <span>{user.UserName}</span>
+                <span>{user?.UserName}</span>
               </a>
             </Dropdown>
             <Button type="link" onClick={showDrawer}>

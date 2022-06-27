@@ -92,13 +92,15 @@ function Profile() {
       <div>Upload New Project</div>
     </div>
   );
-  const handleonfinish = (values) => {
-    //todo
-  };
+
+  const handleonfinish = (values) => {};
+
   const [user, setuser] = useState({});
+
   useEffect(() => {
     setuser(JSON.parse(localStorage.getItem("user")));
   }, []);
+
   return (
     <Form form={form} onFinish={handleonfinish}>
       <div
@@ -113,11 +115,11 @@ function Profile() {
           <Row justify="space-between" align="middle" gutter={[24, 0]}>
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
-                <Avatar size={74} shape="square" src={profilavatar} />
+                <Avatar size={74} shape="square" />
 
                 <div className="avatar-info">
-                  <h4 className="font-semibold m-0">{user.UserName}</h4>
-                  <p>{user.role}</p>
+                  <h4 className="font-semibold m-0">{user?.UserName}</h4>
+                  <p>{user?.role}</p>
                 </div>
               </Avatar.Group>
             </Col>
@@ -150,12 +152,12 @@ function Profile() {
             }
             bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
           >
-            <Descriptions title="Oliver Liam">
+            <Descriptions title="">
               <Descriptions.Item label="Full Name" span={3}>
                 {!Editable ? (
                   <>
-                    {user.UserName}
-                    {user.LastName}
+                    {user?.UserName}
+                    {user?.LastName}
                   </>
                 ) : (
                   <Form.Item name="name">
@@ -165,7 +167,7 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Mobile" span={3}>
                 {!Editable ? (
-                  <> {user.phone}</>
+                  <> {user?.phone}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
@@ -174,7 +176,7 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Email" span={3}>
                 {!Editable ? (
-                  <> {user.email}</>
+                  <> {user?.email}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
@@ -183,23 +185,12 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Location" span={3}>
                 {!Editable ? (
-                  <> {user.location}</>
+                  <> {user?.location}</>
                 ) : (
                   <Form.Item name="name">
                     <Input size="small" style={{ height: "2rem" }} />
                   </Form.Item>
                 )}
-              </Descriptions.Item>
-              <Descriptions.Item label="Social" span={3}>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<TwitterOutlined />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<FacebookOutlined style={{ color: "#344e86" }} />}
-                </a>
-                <a href="#pablo" className="mx-5 px-5">
-                  {<InstagramOutlined style={{ color: "#e1306c" }} />}
-                </a>
               </Descriptions.Item>
             </Descriptions>
           </Card>

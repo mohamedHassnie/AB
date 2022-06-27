@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Card,
@@ -17,12 +17,12 @@ import {
 
 import Echart from "../components/chart/EChart";
 import LineChart from "../components/chart/LineChart";
+import { useHistory } from "react-router-dom";
 
 
 function Home() {
+  
   const { Title, Text } = Typography;
-
-
 
   const dollor = [
     <svg
@@ -110,6 +110,8 @@ function Home() {
       ></path>
     </svg>,
   ];
+
+
   const count = [
     {
       today: "Today’s Analise",
@@ -138,7 +140,11 @@ function Home() {
   ];
 
 
+
+
   return (
+
+    
     <>
       <div className="layout-content">
         <Row className="rowgap-vbox" gutter={[24, 0]}>

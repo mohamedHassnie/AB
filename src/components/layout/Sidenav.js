@@ -53,6 +53,9 @@ function Sidenav({ color }) {
       ></path>
     </svg>,
   ];
+
+
+
   const Tablespatient = [
     <svg
       width="60"
@@ -74,6 +77,9 @@ function Sidenav({ color }) {
       ></path>
     </svg>,
   ];
+
+
+
   const billing = [
     <svg
       width="20"
@@ -96,6 +102,8 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
+
+  
   const profile = [
     <svg
       width="20"
@@ -114,6 +122,7 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
+
   const signin = [
     <svg
       width="20"
@@ -131,6 +140,8 @@ function Sidenav({ color }) {
       ></path>
     </svg>,
   ];
+
+
 
   const signup = [
     <svg
@@ -152,6 +163,8 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
+
+
   return (
     <>
       {/* <div className="brand">
@@ -159,7 +172,7 @@ function Sidenav({ color }) {
       </div> */}
       <hr />
       <Menu theme="dark" mode="inline">
-        {/* {isAuthenticated() && isAuthenticated().role === "admin" && ( */}
+        
         <Fragment>
           <Menu.Item key="1">
             <NavLink to="/dashboard">
@@ -189,15 +202,14 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        {/* // )} */}
-        {/* {isAuthenticated() && isAuthenticated().role === "markiting" && ( */}
+
         <Fragment>
-          <Menu.Item key="1">
+          <Menu.Item key="3">
             <NavLink to="/sign-up">
               <span
                 className="icon"
                 style={{
-                  background: page === "dashboard" ? color : "",
+                  background: page === "sign-up" ? color : "",
                 }}
               >
                 {dashboard}
@@ -206,15 +218,14 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        {/* )} */}
-        {/* {isAuthenticated() && isAuthenticated().role === "markiting" && ( */}
+
         <Fragment>
-          <Menu.Item key="1">
+          <Menu.Item key="4">
             <NavLink to="/Tablepatient">
               <span
                 className="icon"
                 style={{
-                  background: page === "dashboard" ? color : "",
+                  background: page === "Tablepatient" ? color : "",
                 }}
               >
                 {dashboard}
@@ -223,7 +234,7 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        {/* )} */}
+
       </Menu>
     </>
   );

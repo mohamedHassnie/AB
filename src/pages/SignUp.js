@@ -12,6 +12,7 @@ import {
 
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 const { Title } = Typography;
 const { Content } = Layout;
 
@@ -19,10 +20,13 @@ const SignUp = () => {
   const [UserName, setUserName] = useState("");
   const [LastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [Contact_number, setContact_number] = useState("");
+  const [phone, setphone] = useState("");
   const [Nationality, setNationality] = useState("");
   const [Date_of_birth, setDate_of_birth] = useState("");
+  const [location, setLocation] = useState("");
   const [Message, setMessage] = useState("");
+
+  const his = useHistory();
 
   const onFinish = async (values) => {
     console.log("Success:", values);
@@ -30,29 +34,34 @@ const SignUp = () => {
       UserName: UserName,
       LastName: LastName,
       email: email,
-      Contact_number: Contact_number,
+      phone: phone,
       Nationality: Nationality,
       Date_of_birth: Date_of_birth,
       Message: Message,
+      location: location,
     };
     const config = {
       headers: {
         "content-type": "application/json",
       },
     };
+
     await axios
       .post("http://localhost:3010/api/signUpPatient", data, config)
       .then((response) => {
-        console.log(response);
+        notification.success({ message: response.data.successMessage });
+        his.push("/dashboard");
       })
       .catch((err) => {
-        notification.error({ message: "check " });
+        notification.error({ message: "check your data " });
         console.log(err);
       });
   };
+
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    notification.error({ message: "check your data " });
   };
+
   return (
     <>
       <div className="layout-default ant-layout layout-sign-up">
@@ -113,18 +122,18 @@ const SignUp = () => {
               </Form.Item>
 
               <Form.Item
-                name="Contact_number"
+                name="phone"
                 rules={[
                   {
                     required: true,
-                    message: "Please input your Contact_number!",
+                    message: "Please input your phone!",
                   },
                 ]}
               >
                 <Input
-                  placeholder="Contact_number"
+                  placeholder="phone"
                   type="tel"
-                  onChange={(e) => setContact_number(e.target.value)}
+                  onChange={(e) => setphone(e.target.value)}
                 />
               </Form.Item>
               <Form.Item
@@ -140,6 +149,22 @@ const SignUp = () => {
                   placeholder="Nationality"
                   type="texte"
                   onChange={(e) => setNationality(e.target.value)}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="location"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Location!",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="Location"
+                  type="texte"
+                  onChange={(e) => setLocation(e.target.value)}
                 />
               </Form.Item>
               <Form.Item
@@ -158,14 +183,6 @@ const SignUp = () => {
                   onChange={(e) => setDate_of_birth(e.target.value)}
                 />
               </Form.Item>
-              {/* <Form.Item name="Message">
-                <textarea
-                  placeholder="Message"
-                  type="texte"
-                  onChange={(e) => setMessage(e.target.value)}
-                  style={{ width: "100%" }}
-                ></textarea>
-              </Form.Item> */}
               <Form.Item name="remember" valuePropName="checked">
                 <Checkbox>
                   I agree the{" "}

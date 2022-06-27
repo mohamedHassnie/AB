@@ -43,10 +43,13 @@ const { Title } = Typography;
 function Tables() {
   const [visible, setVisible] = useState(false);
   const [visibleE, setVisibleE] = useState(false);
+  const [record, setrecord] = useState({});
   const [data, setdata] = useState([]);
   const [role, setRole] = useState([]);
   const { form } = useForm();
+
   const hist = useHistory();
+
   const columns = [
     {
       title: "Name",
@@ -76,31 +79,34 @@ function Tables() {
       key: "LastName",
       render: (val, record) => {
         return (
-          <Avatar.Group>
-            <Avatar
-              className="shape-avatar"
-              shape="square"
-              size={40}
-              src={record.img} //image like DB 'img'
-            ></Avatar>
-            <div className="avatar-info">
-              <Title level={5}>{val}</Title>
-              <p>{record.email}</p>
-            </div>
-          </Avatar.Group>
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+          </div>
         );
       },
       width: "20%",
     },
     {
       title: "Mobile",
-      dataIndex: "Contact_number",
-      key: "Contact_number",
+      dataIndex: "phone",
+      key: "phone",
       render: (val, record) => {
         return (
           <div className="author-info">
             <Title level={5}>{val}</Title>
-            <p>{record.org}</p>
+          </div>
+        );
+      },
+      width: "20%",
+    },
+    {
+      title: "location",
+      dataIndex: "location",
+      key: "location",
+      render: (val) => {
+        return (
+          <div className="avatar-info">
+            <Title level={5}>{val}</Title>
           </div>
         );
       },
@@ -114,7 +120,6 @@ function Tables() {
           <div className="author-info">
             <Title level={5}>{val}</Title>
             <p>{record.org}</p>
-            {/* check whatever we want to add there */}
           </div>
         );
       },
@@ -143,7 +148,7 @@ function Tables() {
     {
       title: "Action",
       dataIndex: "Action",
-      render: () => {
+      render: (val, record) => {
         return (
           <Space size="middle" direction="horizontal">
             <Button
@@ -151,12 +156,19 @@ function Tables() {
               icon={<EditOutlined />}
               onClick={(e) => {
                 e.preventDefault();
+                setrecord(record);
                 setVisibleE(true);
               }}
             >
               Edit
             </Button>
-            <Button danger onClick={(e) => e.preventDefault()}>
+            <Button
+              danger
+              onClick={(e) => {
+                e.preventDefault();
+                heldeDelete(record._id);
+              }}
+            >
               Delete
             </Button>
           </Space>
@@ -164,52 +176,58 @@ function Tables() {
       },
     },
   ];
+
   useEffect(() => {
     const config = {
       headers: {
         "content-type": "application/json",
       },
     };
-    console.log(role);
 
-    fetch("http://localhost:3010/api/getUserByRole", {
-      Method: "GET",
-      Headers: {
-        Accept: "application.json",
-        "Content-Type": "application/json",
-      },
-      Body: { role: role },
-      Cache: "default",
-    })
-      .then((res) => {
-        setdata(res.data);
-        console.log(res.data, "analysta w makiting w all");
+    axios
+      .post("http://localhost:3010/api/getUserByRole", { role: role }, config)
+      .then(function (response) {
+        console.log("eeeeeeee", response);
+        setdata(response.data);
       })
-      .catch(() => {
-        notification.error({ message: " No user is found " });
+      .catch(function (err) {
+        console.log(err);
       });
   }, [role]);
 
-  const handleUpdate = async (id) => {
+  const heldeDelete = async (_id) => {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+      },
+    };
+
     await axios
-      .delete("http://localhost:3010/api/UpdateUser/:id" + id)
+      .delete("http://localhost:3010/api/deleteUser/" + _id, config)
       .then(function (response) {
-        console.log(response);
+        notification.success({
+          message: response.data.UserName + "Delete Done",
+        });
+
+        axios
+          .post(
+            "http://localhost:3010/api/getUserByRole",
+            { role: role },
+            config
+          )
+          .then(function (response) {
+            console.log("eeeeeeee", response);
+            setdata(response.data);
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
       })
       .catch(function (err) {
-        console.log(err);
+        notification.error({ message: "Delete Error" });
       });
   };
-  const handleAdd = async (id) => {
-    await axios
-      .delete("http://localhost:3010/api/deleteUser/:_id" + id)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
+
   return (
     <Form form={form}>
       <div className="tabled">
@@ -227,13 +245,13 @@ function Tables() {
                       console.log("aaaa", e);
                     }}
                   >
-                    <Radio.Button value="All" name="role">
-                      All
+                    <Radio.Button value="ALL" name="role">
+                      ALL
                     </Radio.Button>
-                    <Radio.Button value="Markiting" name="role">
-                      Markiting
+                    <Radio.Button value="makiting" name="role">
+                      Marketing
                     </Radio.Button>
-                    <Radio.Button value="Analyste" name="role">
+                    <Radio.Button value="analysta" name="role">
                       Analyste
                     </Radio.Button>
                   </Radio.Group>
@@ -271,16 +289,15 @@ function Tables() {
         </Row>
       </div>
       <AddOrUpdateModal
-        visible={visible}
-        handleAddOrUpdate={handleAdd}
-        onCancel={() => setVisible(false)}
-        type="ADD"
-      />
-      <AddOrUpdateModal
         visible={visibleE}
-        handleAddOrUpdate={handleUpdate}
+        record={record}
         onCancel={() => setVisibleE(false)}
         type="EDIT"
+      />
+      <AddOrUpdateModal
+        visible={visible}
+        onCancel={() => setVisible(false)}
+        type="ADD"
       />
     </Form>
   );
