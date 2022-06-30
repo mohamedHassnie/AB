@@ -18,6 +18,7 @@ import {
   Input,
   notification,
 } from "antd";
+import Swal from "sweetalert2";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -164,7 +165,7 @@ function Tablepatient() {
     };
 
     axios
-      .get("http://localhost:3010/api/getPatient", config)
+      .get("http://localhost:3011/api/getPatient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -175,9 +176,13 @@ function Tablepatient() {
 
   const handleUpdate = async (id) => {
     await axios
-      .delete(`http://localhost:3010/api/updatepatient/${id}`)
+      .delete(`http://localhost:3011/api/updatepatient/${id}`)
       .then(function (response) {
-        console.log(response);
+        Swal.fire({
+          icon: "success",
+          title: "message",
+          text: "response.data.message,",
+        });
       })
       .catch(function (err) {
         console.log(err);

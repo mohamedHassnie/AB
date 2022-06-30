@@ -47,7 +47,7 @@ const SignUp = () => {
     };
 
     await axios
-      .post("http://localhost:3010/api/signUpPatient", data, config)
+      .post("http://localhost:3011/api/signUpPatient", data, config)
       .then((response) => {
         notification.success({ message: response.data.successMessage });
         his.push("/dashboard");

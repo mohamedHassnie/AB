@@ -128,7 +128,6 @@ const clockicon = [
   </svg>,
 ];
 
-
 const profile = [
   <svg
     width="20"
@@ -146,7 +145,6 @@ const profile = [
     ></path>
   </svg>,
 ];
-
 
 const data = [
   {
@@ -241,13 +239,10 @@ function Header({
   const [sidenavType, setSidenavType] = useState("transparent");
   const [user, setuser] = useState({});
 
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
     setuser(JSON.parse(localStorage.getItem("user")));
   }, []);
-
 
   console.log(user, "ici user");
   const showDrawer = () => setVisible(true);

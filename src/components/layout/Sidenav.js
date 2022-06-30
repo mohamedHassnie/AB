@@ -54,8 +54,6 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-
-
   const Tablespatient = [
     <svg
       width="60"
@@ -77,8 +75,6 @@ function Sidenav({ color }) {
       ></path>
     </svg>,
   ];
-
-
 
   const billing = [
     <svg
@@ -102,8 +98,6 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-
-  
   const profile = [
     <svg
       width="20"
@@ -122,7 +116,6 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-
   const signin = [
     <svg
       width="20"
@@ -140,8 +133,6 @@ function Sidenav({ color }) {
       ></path>
     </svg>,
   ];
-
-
 
   const signup = [
     <svg
@@ -163,8 +154,6 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
-
-
   return (
     <>
       {/* <div className="brand">
@@ -172,7 +161,6 @@ function Sidenav({ color }) {
       </div> */}
       <hr />
       <Menu theme="dark" mode="inline">
-        
         <Fragment>
           <Menu.Item key="1">
             <NavLink to="/dashboard">
@@ -195,10 +183,8 @@ function Sidenav({ color }) {
                 style={{
                   background: page === "tables" ? color : "",
                 }}
-              >
-                {tables}
-              </span>
-              <span className="label">Liste</span>
+              ></span>
+              <span className="label">Setting_User</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
@@ -234,7 +220,21 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-
+        <Fragment>
+          <Menu.Item key="4">
+            <NavLink to="/add_file">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Tablepatient" ? color : "",
+                }}
+              >
+                {dashboard}
+              </span>
+              <span className="label"> add file</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
       </Menu>
     </>
   );

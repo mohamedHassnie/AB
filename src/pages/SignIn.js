@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./login.css";
+import Swal from "sweetalert2/src/sweetalert2.js";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+
+import GoogleButton from "react-google-button";
 
 import {
   Layout,
@@ -40,15 +45,15 @@ const SignIn = () => {
     };
 
     await axios
-      .post("http://localhost:3010/api/login", data, config)
+      .post("http://localhost:3011/api/login", data, config)
       .then((response) => {
         console.log("hetha houwa", response);
         setAuthentication(response.data.token, response.data.user);
         hist.push("/dashboard");
         notification.success({ message: response.data.message });
       })
-      .catch(() => {
-        notification.error({ message: "check your Email or Password" });
+      .catch((response) => {
+        notification.error({ message: response.data.message });
       });
   };
 
@@ -57,100 +62,69 @@ const SignIn = () => {
   };
 
   return (
-    <>
-      <Layout className="layout-default">
-        <Content className="signin">
-          <Row gutter={[24, 0]} justify="space-around">
-            <Col
-              xs={{ span: 24, offset: 0 }}
-              lg={{ span: 7, offset: 2 }}
-              md={{ span: 12 }}
+    <div className="container">
+      <div className="d-flex justify-content-center h-100">
+        <div className="card">
+          <div className="card-header">
+            <h3>Sign In</h3>
+            <div className="d-flex justify-content-end social_icon">
+              <span>
+                <i className="fab fa-google-plus-square"></i>
+              </span>
+            </div>
+          </div>
+          <div className="card-body">
+            <Form
+              style={{ width: "90%" }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              layout="vertical"
             >
-              <Title className="mb-15">Sign In</Title>
-              <Title className="font-regular text-muted" level={5}>
-                Enter your email and password to sign in
-              </Title>
-              <Form
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                layout="vertical"
-                className="row-col"
+              <Form.Item
+                className="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your email!",
+                  },
+                ]}
               >
-                <Form.Item
-                  className="username"
-                  label="Email"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your email!",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="Email"
-                    name="email"
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </Form.Item>
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                  name="email"
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item
+                className="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your password!",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Password"
+                  name="password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Form.Item>
 
-                <Form.Item
-                  className="username"
-                  label="Password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your password!",
-                    },
-                  ]}
-                >
-                  <Input
-                    placeholder="Password"
-                    name="password"
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </Form.Item>
-
-                <Form.Item
-                  name="remember"
-                  className="aligin-center"
-                  valuePropName="checked"
-                >
-                  <Switch defaultChecked onChange={onChange} />
-                  Remember me
-                </Form.Item>
-
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{ width: "100%" }}
-                  >
-                    SIGN IN
-                  </Button>
-                </Form.Item>
-                <p className="text-muteded">
-                  Don't have an account?{" "}
-                  <Link to="/sign-up" className="text-dark font-bold">
-                    Sign Up
-                  </Link>
-                </p>
-              </Form>
-            </Col>
-            <Col
-              className="sign-img"
-              style={{ padding: 12 }}
-              xs={{ span: 24 }}
-              lg={{ span: 12 }}
-              md={{ span: 12 }}
-            >
-              <img src={signinbg} alt="" />
-            </Col>
-          </Row>
-        </Content>
-      </Layout>
-    </>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  SIGN IN
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

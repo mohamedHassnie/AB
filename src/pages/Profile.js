@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Row,
   Col,
   Card,
   Button,
   List,
+  notification,
   Descriptions,
   Avatar,
   Radio,
+  Image,
   Switch,
   Upload,
   message,
@@ -25,47 +28,62 @@ import {
 } from "@ant-design/icons";
 
 import BgProfile from "../assets/images/bg-profile.jpg";
-import profilavatar from "../assets/images/face-1.jpg";
+import profilavatar from "../assets/images/profil.jpg";
 import { formatCountdown } from "antd/lib/statistic/utils";
 import { useForm } from "antd/lib/form/Form";
 
 function Profile() {
-  const [imageURL, setImageURL] = useState(false);
   const [Editable, setEditable] = useState(false);
   const [Loading, setLoading] = useState(false);
+  const [UserName, setUserName] = useState();
+  const [LastName, setLastName] = useState("");
   const { form } = useForm();
+  const [email, setemail] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [location, setlocation] = useState("");
+  const [file, setFile] = useState("");
+  const [img, setImageName] = useState("");
+  useEffect(() => {
+    setuser(JSON.parse(localStorage.getItem("user")));
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
+    setUserName(user.UserName);
+    setLastName(user.LastName);
+    setemail(user.email);
+    setPhone(user.Phone);
+    setlocation(user.location);
+  }, []);
+  const saveFile = (e) => {
+    setFile(e.target.files[0]);
+    setImageName(e.target.files[0].name);
   };
-
-  const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
+  const uploadFile = async (e) => {
+    const data = new FormData();
+    // houni bch uploadi image b files[0]
+    data.append("userImage", file);
+    axios.post("http://localhost:3011/api/upload", data);
   };
+  // houni update
+  const handleUpdate = async (id) => {
+    const formData = new FormData();
+    formData.append("UserName", UserName);
+    formData.append("LastName", LastName);
+    formData.append("email", email);
+    formData.append("Phone", Phone);
+    formData.append("location", location);
+    formData.append("userImage", img);
 
-  const handleChange = (info) => {
-    if (info.file.status === "uploading") {
-      setLoading(false);
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imageUrl) => {
-        setLoading(false);
-        setImageURL(false);
+    await axios
+      .put(`http://localhost:3011/api/UpdateUser` + formData._id, formData)
+      .then((data) => {
+        console.log(data);
+        notification.success({ message: "Update Done with success" });
+      })
+      .catch(() => {
+        notification.error({ message: "Check your data" });
       });
-    }
   };
 
+  const [user, setuser] = useState({});
   const pencil = [
     <svg
       width="20"
@@ -85,24 +103,8 @@ function Profile() {
       ></path>
     </svg>,
   ];
-
-  const uploadButton = (
-    <div className="ant-upload-text font-semibold text-dark">
-      {<VerticalAlignTopOutlined style={{ width: 20, color: "#000" }} />}
-      <div>Upload New Project</div>
-    </div>
-  );
-
-  const handleonfinish = (values) => {};
-
-  const [user, setuser] = useState({});
-
-  useEffect(() => {
-    setuser(JSON.parse(localStorage.getItem("user")));
-  }, []);
-
   return (
-    <Form form={form} onFinish={handleonfinish}>
+    <Form form={form} onFinish={uploadFile}>
       <div
         className="profile-nav-bg"
         style={{ backgroundImage: "url(" + BgProfile + ")" }}

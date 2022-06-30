@@ -15,11 +15,8 @@ const AddOrUpdateModal = (props) => {
       padding: 20,
     }),
   };
-  const { visible, handleAddOrUpdate, onCancel, type, data } = props;
-  const roles = [
-    { label: "makiting", value: 1 },
-    { label: "analyste", value: 2 },
-  ];
+  const { visible, onCancel } = props;
+
   const [form] = useForm();
 
   useEffect(() => {
@@ -39,7 +36,7 @@ const AddOrUpdateModal = (props) => {
       const values = { ...val, role: form.getFieldValue("role") };
 
       await axios
-        .post("http://localhost:3010/api/addUser", values, config)
+        .post("http://localhost:3011/api/addUser", values, config)
         .then((response) => {
           notification.success({ message: "Done  " });
           onCancel();
