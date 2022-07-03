@@ -51,7 +51,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
 
     {
@@ -65,7 +65,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
 
     {
@@ -79,7 +79,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
     {
       title: "email",
@@ -92,7 +92,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
     {
       title: "Mobile",
@@ -105,7 +105,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
     {
       title: "Nationality",
@@ -117,7 +117,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "20%",
+      width: "10%",
     },
 
     {
@@ -131,7 +131,7 @@ function Tablepatient() {
         );
       },
 
-      width: "20%",
+      width: "10%",
     },
     {
       title: "Action ",
@@ -219,7 +219,7 @@ function Tablepatient() {
   return (
     <div className="tabled">
       <Card>
-        <Row justify="end" gutter={14} style={{ margin: "10px" }}>
+        <Row justify="end" gutter={14} style={{ margin: "20px" }}>
           <Col span={4}>
             <Input
               style={{ width: "90%" }}
@@ -238,7 +238,7 @@ function Tablepatient() {
             </Button>
           </Col>
         </Row>
-        <Row style={{ width: "90%", border: "1px " }}>
+        <Row style={{ width: "50%", border: "3px " }}>
           <Col span={24}>
             <Table
               columns={columns}

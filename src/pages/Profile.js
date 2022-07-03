@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, React } from "react";
 import axios from "axios";
+
 import {
   Row,
   Col,
@@ -25,6 +26,7 @@ import {
   InstagramOutlined,
   VerticalAlignTopOutlined,
   SaveOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 
 import BgProfile from "../assets/images/bg-profile.jpg";
@@ -37,54 +39,79 @@ function Profile() {
   const [Loading, setLoading] = useState(false);
   const [UserName, setUserName] = useState();
   const [LastName, setLastName] = useState("");
-  const { form } = useForm();
+  const [form] = useForm();
   const [email, setemail] = useState("");
   const [Phone, setPhone] = useState("");
   const [location, setlocation] = useState("");
-  const [file, setFile] = useState("");
+  const [filetoup, setfiletoup] = useState({});
   const [img, setImageName] = useState("");
   useEffect(() => {
+    const uu = JSON.parse(localStorage.getItem("user"));
     setuser(JSON.parse(localStorage.getItem("user")));
+    form?.setFieldsValue({
+      UserName: uu?.UserName,
+      LastName: uu?.LastName,
+    });
 
-    setUserName(user.UserName);
-    setLastName(user.LastName);
-    setemail(user.email);
-    setPhone(user.Phone);
-    setlocation(user.location);
+    // setUserName(user.UserName);
+    // setLastName(user.LastName);
+    // setemail(user.email);
+    // setPhone(user.Phone);
+    // setlocation(user.location);
   }, []);
-  const saveFile = (e) => {
-    setFile(e.target.files[0]);
-    setImageName(e.target.files[0].name);
-  };
-  const uploadFile = async (e) => {
-    const data = new FormData();
-    // houni bch uploadi image b files[0]
-    data.append("userImage", file);
-    axios.post("http://localhost:3011/api/upload", data);
-  };
-  // houni update
-  const handleUpdate = async (id) => {
-    const formData = new FormData();
-    formData.append("UserName", UserName);
-    formData.append("LastName", LastName);
-    formData.append("email", email);
-    formData.append("Phone", Phone);
-    formData.append("location", location);
-    formData.append("userImage", img);
+  const formData = new FormData();
+  const props = {
+    name: "file",
+    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+    headers: {
+      authorization: "authorization-text",
+    },
 
-    await axios
-      .put(`http://localhost:3011/api/UpdateUser` + formData._id, formData)
-      .then((data) => {
-        console.log(data);
-        notification.success({ message: "Update Done with success" });
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        let file = info?.file?.originFileObj;
+        console.log("testttt", file);
+        formData.append("userImage", file);
+        axios
+          .post("http://localhost:3011/api/upload", formData)
+          .then((res) => {
+            notification.success({ message: "Upload Image done with success" });
+            setImageName(file.name);
+          })
+          .catch(() => {
+            notification.success({ message: "Upload Image done with success" });
+            setImageName(file.name);
+          });
+      }
+
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
+  const handleUpdate = (values) => {
+    axios
+      .post("http://localhost:3011/api/UpdateUser/", user.id, {
+        UserName: values.UserName,
+        LastName: values.LastName,
+        UserImage: values.UserImage,
+        phone: values.phone,
+        location: values.location,
+        email: values.email,
+      })
+      .then((res) => {
+        notification.success({ message: "Update done with success" });
       })
       .catch(() => {
-        notification.error({ message: "Check your data" });
+        notification.success({ message: "Error" });
       });
   };
 
   const [user, setuser] = useState({});
-  const pencil = [
+  const pencil = (
     <svg
       width="20"
       height="20"
@@ -101,10 +128,10 @@ function Profile() {
         d="M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z"
         className="fill-gray-7"
       ></path>
-    </svg>,
-  ];
+    </svg>
+  );
   return (
-    <Form form={form} onFinish={uploadFile}>
+    <Form form={form} onFinish={handleUpdate}>
       <div
         className="profile-nav-bg"
         style={{ backgroundImage: "url(" + BgProfile + ")" }}
@@ -118,7 +145,7 @@ function Profile() {
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
                 <Avatar size={74} shape="square" />
-
+                <img src={user?.img} alt="image" />
                 <div className="avatar-info">
                   <h4 className="font-semibold m-0">{user?.UserName}</h4>
                   <p>{user?.role}</p>
@@ -137,7 +164,12 @@ function Profile() {
             className="header-solid h-full card-profile-information"
             extra={
               !Editable ? (
-                <Button type="link" onClick={(val) => setEditable(!Editable)}>
+                <Button
+                  type="link"
+                  onClick={(val) => {
+                    setEditable(!Editable);
+                  }}
+                >
                   {pencil}
                 </Button>
               ) : (
@@ -157,41 +189,60 @@ function Profile() {
             <Descriptions title="">
               <Descriptions.Item label="Full Name" span={3}>
                 {!Editable ? (
-                  <>
-                    {user?.UserName}
-                    {user?.LastName}
-                  </>
+                  user?.UserName + " " + user?.LastName
                 ) : (
-                  <Form.Item name="name">
-                    <Input size="small" style={{ height: "2rem" }} />
-                  </Form.Item>
+                  <>
+                    <Form.Item name="UserName">
+                      <Input
+                        size="small"
+                        placeholder="useName"
+                        style={{ height: "2rem" }}
+                      />
+                    </Form.Item>
+                    &nbsp;
+                    <Form.Item name="LastName">
+                      <Input
+                        size="small"
+                        placeholder="LastName"
+                        style={{ height: "2rem" }}
+                      />
+                    </Form.Item>{" "}
+                  </>
                 )}
               </Descriptions.Item>
               <Descriptions.Item label="Mobile" span={3}>
                 {!Editable ? (
-                  <> {user?.phone}</>
+                  user?.phone
                 ) : (
-                  <Form.Item name="name">
+                  <Form.Item name="phone">
                     <Input size="small" style={{ height: "2rem" }} />
                   </Form.Item>
                 )}
+                {/* desx : components antd .item houwa appel lih yesama child */}
               </Descriptions.Item>
               <Descriptions.Item label="Email" span={3}>
                 {!Editable ? (
-                  <> {user?.email}</>
+                  user?.email
                 ) : (
-                  <Form.Item name="name">
+                  <Form.Item name="email">
                     <Input size="small" style={{ height: "2rem" }} />
                   </Form.Item>
                 )}
               </Descriptions.Item>
               <Descriptions.Item label="Location" span={3}>
                 {!Editable ? (
-                  <> {user?.location}</>
+                  user?.location
                 ) : (
-                  <Form.Item name="name">
+                  <Form.Item name="location">
                     <Input size="small" style={{ height: "2rem" }} />
                   </Form.Item>
+                )}
+              </Descriptions.Item>
+              <Descriptions.Item label="Image" span={3}>
+                {Editable && (
+                  <Upload {...props}>
+                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                  </Upload>
                 )}
               </Descriptions.Item>
             </Descriptions>

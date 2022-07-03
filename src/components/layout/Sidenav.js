@@ -175,23 +175,11 @@ function Sidenav({ color }) {
               <span className="label">Dashboard</span>
             </NavLink>
           </Menu.Item>
-
-          <Menu.Item key="2">
-            <NavLink to="/tables">
-              <span
-                className="icon"
-                style={{
-                  background: page === "tables" ? color : "",
-                }}
-              ></span>
-              <span className="label">Setting_User</span>
-            </NavLink>
-          </Menu.Item>
         </Fragment>
 
         <Fragment>
           <Menu.Item key="3">
-            <NavLink to="/sign-up">
+            <NavLink to="/tables">
               <span
                 className="icon"
                 style={{
@@ -200,11 +188,10 @@ function Sidenav({ color }) {
               >
                 {dashboard}
               </span>
-              <span className="label">Add Patient</span>
+              <span className="label">Setting_User</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-
         <Fragment>
           <Menu.Item key="4">
             <NavLink to="/Tablepatient">
@@ -216,7 +203,7 @@ function Sidenav({ color }) {
               >
                 {dashboard}
               </span>
-              <span className="label">Setting Patient</span>
+              <span className="label"> Patient</span>
             </NavLink>
           </Menu.Item>
         </Fragment>

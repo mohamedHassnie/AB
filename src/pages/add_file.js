@@ -1,5 +1,3 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, message, Input, Upload } from "antd";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "./file.css";

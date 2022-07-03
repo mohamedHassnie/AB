@@ -18,7 +18,7 @@ import {
   Input,
   notification,
 } from "antd";
-
+import Swal from "sweetalert2";
 // Images
 import face from "../assets/images/face-1.jpg";
 import face2 from "../assets/images/face-2.jpg";
@@ -48,8 +48,6 @@ function Tables() {
   const [role, setRole] = useState([]);
   const { form } = useForm();
 
-  const hist = useHistory();
-
   const columns = [
     {
       title: "Name",
@@ -71,7 +69,7 @@ function Tables() {
           </Avatar.Group>
         );
       },
-      width: "20%",
+      width: "13%",
     },
     {
       title: "LastName",
@@ -84,7 +82,7 @@ function Tables() {
           </div>
         );
       },
-      width: "20%",
+      width: "13%",
     },
     {
       title: "Mobile",
@@ -97,7 +95,7 @@ function Tables() {
           </div>
         );
       },
-      width: "20%",
+      width: "13%",
     },
     {
       title: "location",
@@ -110,7 +108,7 @@ function Tables() {
           </div>
         );
       },
-      width: "20%",
+      width: "13%",
     },
     {
       title: "role",
@@ -123,7 +121,7 @@ function Tables() {
           </div>
         );
       },
-      width: "20%",
+      width: "13%",
     },
 
     {
@@ -142,7 +140,7 @@ function Tables() {
           </Tag>
         );
       },
-      width: "20%",
+      width: "13%",
     },
 
     {
@@ -201,31 +199,39 @@ function Tables() {
         "content-type": "application/json",
       },
     };
-
-    await axios
-      .delete("http://localhost:3010/api/deleteUser/" + _id, config)
-      .then(function (response) {
-        notification.success({
-          message: response.data.UserName + "Delete Done",
-        });
-
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
         axios
-          .post(
-            "http://localhost:3010/api/getUserByRole",
-            { role: role },
-            config
-          )
+          .delete("http://localhost:3010/api/deleteUser/" + _id, config)
           .then(function (response) {
-            console.log("eeeeeeee", response);
-            setdata(response.data);
+            axios
+              .post(
+                "http://localhost:3010/api/getUserByRole",
+                { role: role },
+                config
+              )
+              .then(function (response) {
+                console.log("eeeeeeee", response);
+                setdata(response.data);
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
           })
           .catch(function (err) {
-            console.log(err);
+            notification.error({ message: "Delete Error" });
           });
-      })
-      .catch(function (err) {
-        notification.error({ message: "Delete Error" });
-      });
+      }
+    });
   };
 
   return (

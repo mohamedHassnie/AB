@@ -3,7 +3,7 @@ import { useForm } from "antd/lib/form/Form";
 import React, { useEffect, useState } from "react";
 import { notification } from "antd";
 import Creatable from "react-select/creatable";
-
+import Swal from "sweetalert2";
 import axios from "axios";
 const { Option } = Select;
 const AddOrUpdateModal = (props) => {
@@ -38,7 +38,11 @@ const AddOrUpdateModal = (props) => {
       await axios
         .post("http://localhost:3011/api/addUser", values, config)
         .then((response) => {
-          notification.success({ message: "Done  " });
+          Swal.fire({
+            icon: "success",
+            title: "message",
+            text: response.data.successMessage,
+          });
           onCancel();
         })
         .catch((err) => {
