@@ -40,6 +40,8 @@ function Profile() {
   const [UserName, setUserName] = useState();
   const [LastName, setLastName] = useState("");
   const [form] = useForm();
+  const [user, setuser] = useState({});
+
   const [email, setemail] = useState("");
   const [Phone, setPhone] = useState("");
   const [location, setlocation] = useState("");
@@ -48,69 +50,38 @@ function Profile() {
   useEffect(() => {
     const uu = JSON.parse(localStorage.getItem("user"));
     setuser(JSON.parse(localStorage.getItem("user")));
+
     form?.setFieldsValue({
       UserName: uu?.UserName,
       LastName: uu?.LastName,
+      email: uu?.email,
+      Phone: uu?.Phone,
+      location: uu?.location,
     });
-
-    // setUserName(user.UserName);
-    // setLastName(user.LastName);
-    // setemail(user.email);
-    // setPhone(user.Phone);
-    // setlocation(user.location);
   }, []);
-  const formData = new FormData();
-  const props = {
-    name: "file",
-    action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-    headers: {
-      authorization: "authorization-text",
-    },
-
-    onChange(info) {
-      if (info.file.status !== "uploading") {
-        let file = info?.file?.originFileObj;
-        console.log("testttt", file);
-        formData.append("userImage", file);
-        axios
-          .post("http://localhost:3011/api/upload", formData)
-          .then((res) => {
-            notification.success({ message: "Upload Image done with success" });
-            setImageName(file.name);
-          })
-          .catch(() => {
-            notification.success({ message: "Upload Image done with success" });
-            setImageName(file.name);
-          });
-      }
-
-      if (info.file.status === "done") {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
 
   const handleUpdate = (values) => {
+    console.log("ooooooooooooo", values, form.getFieldValue("LastName"));
+
     axios
-      .post("http://localhost:3011/api/UpdateUser/", user.id, {
+      .put("http://localhost:3011/api/UpdateUser/" + user.id, {
         UserName: values.UserName,
         LastName: values.LastName,
-        UserImage: values.UserImage,
+        userImage: form.getFieldValue("UserImage"),
         phone: values.phone,
         location: values.location,
         email: values.email,
       })
       .then((res) => {
         notification.success({ message: "Update done with success" });
+        console.log("testtt", res);
+        setuser({ ...res.data, id: res._id });
       })
       .catch(() => {
         notification.success({ message: "Error" });
       });
   };
 
-  const [user, setuser] = useState({});
   const pencil = (
     <svg
       width="20"
@@ -130,8 +101,29 @@ function Profile() {
       ></path>
     </svg>
   );
+
+  let image = "";
+  console.log("testtt", JSON.parse(localStorage.getItem("user")));
+  if (JSON.parse(localStorage.getItem("user"))?.userImage) {
+    // image = require("C:/project/back/images/" +
+    //   JSON.parse(localStorage.getItem("user"))?.userImage);
+    // console.log("testtt", "C:/project/back/images/" + user?.userImage);
+  }
   return (
-    <Form form={form} onFinish={handleUpdate}>
+    <Form
+      form={form}
+      initialValues={{
+        UserName: "",
+        LastName: "",
+        UserImage: "",
+        phone: "",
+        location: "",
+        email: "",
+      }}
+      onFinish={(values) => {
+        handleUpdate(values);
+      }}
+    >
       <div
         className="profile-nav-bg"
         style={{ backgroundImage: "url(" + BgProfile + ")" }}
@@ -145,7 +137,7 @@ function Profile() {
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
                 <Avatar size={74} shape="square" />
-                <img src={user?.img} alt="image" />
+                {image !== "" && <Image width={200} src={image} />}
                 <div className="avatar-info">
                   <h4 className="font-semibold m-0">{user?.UserName}</h4>
                   <p>{user?.role}</p>
@@ -166,7 +158,7 @@ function Profile() {
               !Editable ? (
                 <Button
                   type="link"
-                  onClick={(val) => {
+                  onClick={() => {
                     setEditable(!Editable);
                   }}
                 >
@@ -175,13 +167,13 @@ function Profile() {
               ) : (
                 <Button
                   type="link"
-                  htmlType="submit"
                   icon={<SaveOutlined />}
-                  onClick={(val) => {
+                  onClick={() => {
                     setEditable(!Editable);
+                    form.submit();
                   }}
                   size="large"
-                ></Button>
+                />
               )
             }
             bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
@@ -206,7 +198,7 @@ function Profile() {
                         placeholder="LastName"
                         style={{ height: "2rem" }}
                       />
-                    </Form.Item>{" "}
+                    </Form.Item>
                   </>
                 )}
               </Descriptions.Item>
@@ -240,7 +232,42 @@ function Profile() {
               </Descriptions.Item>
               <Descriptions.Item label="Image" span={3}>
                 {Editable && (
-                  <Upload {...props}>
+                  <Upload
+                    onChange={({ file, fileList }) => {
+                      if (file.status !== "uploading") {
+                        console.log("filee", file);
+
+                        var bodyFormData = new FormData();
+
+                        bodyFormData.append("userImage", file.originFileObj);
+                        form.setFieldsValue({
+                          UserImage: file.originFileObj.name,
+                        });
+                        axios({
+                          method: "post",
+                          url: "http://localhost:3011/api/upload",
+                          data: bodyFormData,
+                          headers: { "Content-Type": "multipart/form-data" },
+                        })
+                          .then(function (respnse) {
+                            //handle success
+                            console.log(respnse);
+                          })
+                          .catch(function (response) {
+                            //handle error
+                            console.log(response);
+                          });
+                      }
+                    }}
+                    progress={{
+                      strokeColor: {
+                        "0%": "#108ee9",
+                        "100%": "#87d068",
+                      },
+                      strokeWidth: 3,
+                      format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
+                    }}
+                  >
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>
                   </Upload>
                 )}

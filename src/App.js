@@ -13,6 +13,7 @@ import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import { useEffect, useState } from "react";
+import RestPassword from "./pages/RestPassword";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Switch>
         <Route path="/sign-up" exact component={SignUp} />
         <Route path="/sign-in" exact component={SignIn} />
+        <Route exact path="/profile/ressetpass/:id/:token" component={RestPassword} />
 
         <Main>
           <Route exact path="/dashboard" component={Home} />
@@ -28,7 +30,8 @@ function App() {
           <Route exact path="/profile" component={Profile} />
 
           <Route exact path="/add_file" component={add_file} />
-          {/* <Redirect from="*" to="/dashboard" /> */}
+   
+          <Redirect from="*" to="/dashboard" />
           {!JSON.parse(localStorage.getItem("user")) ? (
             <Redirect to="/sign-in" />
           ) : (

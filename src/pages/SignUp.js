@@ -41,7 +41,6 @@ const SignUp = () => {
       Nationality: Nationality,
       Date_of_birth: Date_of_birth,
       Gender: Gender,
-
       location: location,
       Type_Analyse: selected,
     };
