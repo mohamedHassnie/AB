@@ -34,7 +34,7 @@ function Sidenav({ color }) {
 
   const tables = [
     <svg
-      width="20"
+      width="30"
       height="20"
       viewBox="0 0 20 20"
       fill="none"
@@ -156,11 +156,14 @@ function Sidenav({ color }) {
 
   return (
     <>
-      {/* <div className="brand">
+      <div className="brand">
         <img src={logo} alt="" style={{ width: "200px", height: "100px" }} />
-      </div> */}
-      <hr />
+      </div>
+      <hr /> <br /> <br />
       <Menu theme="dark" mode="inline">
+        {/* <img src={logo} alt="" /> */}
+        <br />
+
         <Fragment>
           <Menu.Item key="1">
             <NavLink to="/dashboard">
@@ -176,7 +179,6 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-
         <Fragment>
           <Menu.Item key="3">
             <NavLink to="/tables">

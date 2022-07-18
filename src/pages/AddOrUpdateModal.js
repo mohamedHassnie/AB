@@ -116,6 +116,15 @@ const AddOrUpdateModal = (props) => {
                     form.setFieldsValue({ role: e });
                   }}
                 >
+                  <Option
+                    disabled
+                    value=""
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    choissez_role
+                  </Option>
                   <Option value="makiting">Marketing</Option>
                   <Option value="analysta">Analyste</Option>
                 </Select>

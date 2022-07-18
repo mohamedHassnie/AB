@@ -1,6 +1,8 @@
+/* .App {
+  background-image: url(https://media.istockphoto.com/vectors/coronavirus-epidemic-vector-id1210764282?b=1&k=20&m=1210764282&s=170667a&w=0&h=fVlX4Y8-IWFplyRDD0rPWouYrOsGT-W3_eGQrvGH9yM=);
+} */
 .register {
-  background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-  margin-top: 3%;
+  margin-top: 1%;
   padding: 3%;
 }
 .register-left {

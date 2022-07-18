@@ -104,11 +104,11 @@ function Profile() {
 
   let image = "";
   console.log("testtt", JSON.parse(localStorage.getItem("user")));
-  if (JSON.parse(localStorage.getItem("user"))?.userImage) {
-    // image = require("C:/project/back/images/" +
-    //   JSON.parse(localStorage.getItem("user"))?.userImage);
-    // console.log("testtt", "C:/project/back/images/" + user?.userImage);
-  }
+  // if (JSON.parse(localStorage.getItem("user"))?.userImage) {
+  //   image = require("C:/project/back/images/" +
+  //     JSON.parse(localStorage.getItem("user"))?.userImage);
+  //   console.log("testtt", "C:/project/back/images/" + user?.userImage);
+  // }
   return (
     <Form
       form={form}

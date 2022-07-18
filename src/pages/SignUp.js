@@ -81,63 +81,25 @@ const SignUp = () => {
   };
   return (
     <>
-      <div>
+      <div
+        style={{
+          backgroundImage:
+            "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZI_vUJAFQNTqsS_Ew7l1JQiFQVmr5YnG_Bg&usqp=CAU)",
+        }}
+      >
         (
         <div className="container register">
           <div className="row">
             <div className="col-md-3 register-left">
-              <img
-                src="https://abiomix.com/front/images/Illustration-2.svg"
-                alt=""
-                style={{ width: "150%" }}
-              />
-
-              {/* <p>You are 30 seconds away from earning your own money!</p> */}
-              {/* <input type="submit" name defaultValue="Login" /> */}
-              <br />
-              <br />
-              {/* <button type="submit" className="btnSubmit">
-                <Link to="./sign-in">Sig_Up Patient</Link>
-              </button> */}
+              <p>texte ...</p>
 
               <br />
               <br />
+
               <br />
               {/* <h3 style={{ fontFamily: "initial" }}>Welcome </h3> */}
             </div>
             <div className="col-md-9 register-right">
-              <ul
-                className="nav nav-tabs nav-justified"
-                id="myTab"
-                role="tablist"
-              >
-                <li className="nav-item">
-                  <a
-                    className="nav-link active"
-                    id="home-tab"
-                    data-toggle="tab"
-                    href="#home"
-                    role="tab"
-                    aria-controls="home"
-                    aria-selected="true"
-                  >
-                    Patient
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    className="nav-link"
-                    id="profile-tab"
-                    data-toggle="tab"
-                    href="#profile"
-                    role="tab"
-                    aria-controls="profile"
-                    aria-selected="false"
-                  >
-                    Analyse
-                  </a>
-                </li>
-              </ul>
               <Form onFinish={onFinish}>
                 <div className="tab-content" id="myTabContent">
                   <div
@@ -151,7 +113,7 @@ const SignUp = () => {
                       <div className="col-md-6">
                         <div className="form-group">
                           <input
-                            placeholder="UserName"
+                            placeholder="UserName*"
                             type="texte"
                             onChange={(e) => setUserName(e.target.value)}
                             className="form-control"
@@ -160,7 +122,7 @@ const SignUp = () => {
                         <div className="form-group">
                           <input
                             className="form-control"
-                            placeholder="LastName"
+                            placeholder="LastName*"
                             type="texte"
                             onChange={(e) => setLastName(e.target.value)}
                           />
@@ -168,7 +130,7 @@ const SignUp = () => {
                         <div className="form-group">
                           <input
                             className="form-control"
-                            placeholder="Location"
+                            placeholder="Location*"
                             type="texte"
                             onChange={(e) => setLocation(e.target.value)}
                           />
@@ -176,7 +138,7 @@ const SignUp = () => {
                         <div className="form-group">
                           <input
                             className="form-control"
-                            placeholder="Nationality"
+                            placeholder="Nationality*"
                             type="texte"
                             onChange={(e) => setNationality(e.target.value)}
                           />
@@ -187,6 +149,7 @@ const SignUp = () => {
                               <input type="radio" name="gender" value="femme" />
                               <span> female </span>
                             </label>
+                            &nbsp; &nbsp;
                             <label className="radio inline">
                               <input
                                 handleChangeGender
@@ -222,7 +185,10 @@ const SignUp = () => {
                             value={selected}
                             onChange={handleChange}
                           >
-                            a<option value="Swab">Swab</option>
+                            <option value="" disabled>
+                              Type Analyse
+                            </option>
+                            <option value="Swab">Swab</option>
                             <option value="Spit">Spit</option>
                             <option value="Blood">Blood</option>
                           </select>
@@ -230,7 +196,7 @@ const SignUp = () => {
                         <div className="form-group">
                           <input
                             className="form-control"
-                            placeholder="Date_of_birth"
+                            placeholder="Date_of_birth*"
                             type="date"
                             onChange={(e) => setDate_of_birth(e.target.value)}
                           />
@@ -249,7 +215,7 @@ const SignUp = () => {
                     role="tabpanel"
                     aria-labelledby="profile-tab"
                   >
-                    {/* <h3 className="register-heading">Apply as a Hirer</h3> */}
+                    <h3 className="register-heading">Apply as a Hirer</h3>
                     <div className="row register-form">
                       <div className="col-md-6">
                         <div className="form-group">
@@ -295,13 +261,20 @@ const SignUp = () => {
                       </div>
                     </div>
                   </div>
-                </div>{" "}
+                </div>
               </Form>
             </div>
           </div>
         </div>
         );
       </div>
+      {/* <div>
+        <img
+          src="https://abiomix.com/front/images/Bioinformatics%20Made%20Easy.svg"
+          alt=""
+          style={{ width: "100%", height: "100" }}
+        ></img>
+      </div> */}
     </>
   );
 };

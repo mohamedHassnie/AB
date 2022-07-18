@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { logout } from "../../helpers/auth";
+//import { logout } from "../../helpers/auth";
 import {
   Row,
   Col,
@@ -19,7 +19,6 @@ import {
 
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
-import avtar from "../../assets/images/team-2.jpg";
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {
@@ -60,6 +59,10 @@ const profile = [
   </svg>,
 ];
 
+const logout = () => {
+  localStorage.clear();
+  window.location.reload();
+};
 const menu = (
   <Menu>
     <Menu.Item key="1">
@@ -68,9 +71,11 @@ const menu = (
       </Link>
     </Menu.Item>
     <Menu.Item key="2">
-      <Link to="/sign-in" className="btn-sign-in">
-        logout
-      </Link>
+      <button onClick={logout}>
+        <Link to="/sign-in" className="btn-sign-in">
+          logout
+        </Link>
+      </button>
     </Menu.Item>
   </Menu>
 );

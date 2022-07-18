@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./login.css";
-import Swal from "sweetalert2/src/sweetalert2.js";
-import emailjs from "@emailjs/browser";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
-import GoogleButton from "react-google-button";
+import emailjs from "@emailjs/browser";
 
 import {
   Layout,
@@ -19,7 +15,7 @@ import {
   notification,
 } from "antd";
 
-import { isAuthenticated, setAuthentication } from "../helpers/auth";
+import { setAuthentication } from "../helpers/auth";
 
 import signinbg from "../assets/images/SGimg.svg";
 import axios from "axios";
@@ -36,7 +32,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const hist = useHistory();
 
-  const onFinish = async (e) => {
+  const onFinish = async () => {
     const data = {
       email: email,
       password: password,
@@ -138,76 +134,118 @@ const SignIn = () => {
   };
 
   return (
-    <div className="container">
-      <div className="d-flex justify-content-center h-100">
-        <div className="card">
-          <div className="card-header">
-            <h3>Sign In</h3>
-          </div>
-          <div className="card-body">
-            <Form
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              layout="vertical"
+    <>
+      <Layout className="layout-default">
+        <Content className="signin">
+          <Row gutter={[24, 0]} justify="space-around">
+            <Col
+              xs={{ span: 24, offset: 0 }}
+              lg={{ span: 7, offset: 2 }}
+              md={{ span: 12 }}
             >
-              <Form.Item
-                className="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your email!",
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="Email"
-                  name="email"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Form.Item>
-              <Form.Item
-                className="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Item>
+              <Title className="mb-15"> Connectez-vous</Title>
 
-              <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  SIGN IN
-                </Button>
-                <br /> <br />
-                <GoogleLogin
-                  clientId={
-                    "383609296631-1rqh8hldbf76j1420idr4l0bhhab1lhr.apps.googleusercontent.com"
-                  }
-                  buttonText="login with Google"
-                  onSuccess={handleLogin}
-                  cookiePolicy={"single_host_origin"}
-                ></GoogleLogin>
-              </Form.Item>
-              <a onClick={resetpassword} style={{ color: "#fff" }}>
-                {" "}
-                Forget password ?
-              </a>
-            </Form>
-          </div>
-        </div>
-      </div>
-    </div>
+              <Form
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                layout="vertical"
+                className="row-col"
+              >
+                <Form.Item
+                  className="username"
+                  label="Email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your email!",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Email"
+                    name="email"
+                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  className="username"
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                  ]}
+                >
+                  <Input
+                    placeholder="Password"
+                    name="password"
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="remember"
+                  className="aligin-center"
+                  valuePropName="checked"
+                >
+                  <Switch defaultChecked onChange={onChange} />
+                  Remember me
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: "100%" }}
+                  >
+                    SIGN IN
+                  </Button>
+                </Form.Item>
+                <Form.Item>
+                  <a onClick={resetpassword}> Forget password ?</a>
+                </Form.Item>
+                <Form.Item>
+                  <GoogleLogin
+                    clientId={
+                      "383609296631-1rqh8hldbf76j1420idr4l0bhhab1lhr.apps.googleusercontent.com"
+                    }
+                    buttonText="login with Google"
+                    onSuccess={handleLogin}
+                    cookiePolicy={"single_host_origin"}
+                  ></GoogleLogin>
+                </Form.Item>
+                <Form.Item>
+                  {" "}
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    style={{
+                      width: "48%",
+                      height: "47px",
+                      position: "center",
+                    }}
+                  >
+                    <Link to="/sign-up" className="text-dark font-bold">
+                      SignUp Patient
+                    </Link>
+                  </button>
+                </Form.Item>
+              </Form>
+            </Col>
+            <Col
+              className="sign-img"
+              style={{ padding: 12 }}
+              xs={{ span: 24 }}
+              lg={{ span: 12 }}
+              md={{ span: 12 }}
+            >
+              <img src={signinbg} alt="" />
+            </Col>
+          </Row>
+        </Content>
+      </Layout>
+    </>
   );
 };
 

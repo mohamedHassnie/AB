@@ -41,31 +41,18 @@ function Tablepatient() {
   const hist = useHistory();
   const columns = [
     {
-      title: "Name",
+      title: "Name et Prénom",
       dataIndex: "UserName",
       key: "name",
-      render: (val) => {
+      render: (val, record) => {
         return (
           <div className="avatar-info">
             <Title level={5}>{val}</Title>
+            <p>{record.LastName}</p>
           </div>
         );
       },
-      width: "10%",
-    },
-
-    {
-      title: "Prénom",
-      dataIndex: "LastName",
-      key: "LastName",
-      render: (val) => {
-        return (
-          <div className="avatar-info">
-            <Title level={5}>{val}</Title>
-          </div>
-        );
-      },
-      width: "10%",
+      width: "12%",
     },
 
     {
@@ -79,7 +66,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "10%",
+      width: "12%",
     },
     {
       title: "email",
@@ -92,7 +79,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "10%",
+      width: "12%",
     },
     {
       title: "Mobile",
@@ -105,7 +92,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "10%",
+      width: "12%",
     },
     {
       title: "Nationality",
@@ -117,7 +104,7 @@ function Tablepatient() {
           </div>
         );
       },
-      width: "10%",
+      width: "12%",
     },
 
     {
@@ -131,11 +118,36 @@ function Tablepatient() {
         );
       },
 
-      width: "10%",
+      width: "12%",
+    },
+    {
+      title: "T-analyse",
+      dataIndex: "Type_Analyse",
+      render: (val, record) => {
+        return (
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+          </div>
+        );
+      },
+
+      width: "12%",
+    },
+    {
+      title: "Gender",
+      dataIndex: "Gender",
+      render: (val, record) => {
+        return (
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+          </div>
+        );
+      },
+
+      width: "12%",
     },
     {
       title: "Action ",
-
       render: (row) => {
         return (
           <Space size="middle" direction="horizontal">
@@ -143,7 +155,7 @@ function Tablepatient() {
               type="primary"
               icon={<EditOutlined />}
               onClick={(e) => {
-                handleUpdate(row._id);
+                // handleUpdate(row._id);
               }}
             >
               Edit
@@ -174,34 +186,38 @@ function Tablepatient() {
       });
   }, []);
 
-  const handleUpdate = async (id) => {
-    await axios
-      .delete(`http://localhost:3011/api/updatepatient/${id}`)
-      .then(function (response) {
-        Swal.fire({
-          icon: "success",
-          title: "message",
-          text: "response.data.message,",
-        });
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
+  // const handleUpdate = async (id) => {
+  //   await axios
+  //     .delete(`http://localhost:3011/api/updatepatient/${id}`)
+  //     .then(function (response) {
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "message",
+  //         text: "response.data.message,",
+  //       });
+  //     })
+  //     .catch(function (err) {
+  //       console.log(err);
+  //     });
+  // };
 
   const handleDelete = async (id) => {
     await axios
-      .delete(`http://localhost:3010/api/deletePatient/${id}`)
+      .delete(`http://localhost:3011/api/deletePatient/${id}`)
       .then(function (response) {
+        console.log(response);
+      })
+      .then(() => {
         axios
-          .get("http://localhost:3010/api/getPatient")
-          .then((res) => {
-            setdata(res.data);
+          .get("http://localhost:3011/api/getPatient")
+          .then((response) => {
+            setdata(response.data);
           })
           .catch(() => {
             notification.error({ message: " No user is found " });
           });
       })
+
       .catch(function (err) {
         console.log(err);
       });
@@ -209,13 +225,14 @@ function Tablepatient() {
 
   const handleSearch = async () => {
     let resultat = await fetch(
-      `http://localhost:3010/api/searchPatient/${key}`
+      `http://localhost:3011/api/searchPatient/${key}`
     );
     resultat = await resultat.json();
     if (resultat) {
       setdata(resultat);
     }
   };
+
   return (
     <div className="tabled">
       <Card>
