@@ -66,16 +66,11 @@ const logout = () => {
 const menu = (
   <Menu>
     <Menu.Item key="1">
-      <Link to="/profile" className="btn-sign-in">
-        view Profile
-      </Link>
+      <Link to="/profile">view Profile</Link>
     </Menu.Item>
+
     <Menu.Item key="2">
-      <button onClick={logout}>
-        <Link to="/sign-in" className="btn-sign-in">
-          logout
-        </Link>
-      </button>
+      <Link to="/sign-in">logout</Link>
     </Menu.Item>
   </Menu>
 );
@@ -198,6 +193,7 @@ function Header({
             <Button type="link" onClick={showDrawer}>
               {logsetting}
             </Button>
+            <Button type="link">{setting}</Button>
           </Space>
           <Drawer
             className="settings-drawer"

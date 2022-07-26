@@ -43,21 +43,19 @@ function CountFile() {
     ref.current.value = null;
   };
 
-  useEffect(() => {
-    axios.get("http://localhost:3011/api/getCount").then((reponse) => {
-      console.log("hhh", reponse);
-      console.log("ttt", reponse.data);
-      if (reponse) {
-        setState({
-          ...state, //parcours state feha 2 objet w l9it feha 2 variable w 5thithom w override
-          countfileCSV: reponse.data.UserfileCSV,
-          countFileVCF: reponse.data.UserfileVCF,
-        });
-      } else {
-        SetreponsErr(reponse.err.error);
-        alert("Error: ", { reponsErr });
-      }
-    });
+  axios.get("http://localhost:3011/api/getCount").then((reponse) => {
+    console.log("hhh", reponse);
+    console.log("ttt", reponse.data);
+    if (reponse) {
+      setState({
+        ...state, //parcours state feha 2 objet w l9it feha 2 variable w 5thithom w override
+        countfileCSV: reponse.data.UserfileCSV,
+        countFileVCF: reponse.data.UserfileVCF,
+      });
+    } else {
+      SetreponsErr(reponse.err.error);
+      alert("Error: ", { reponsErr });
+    }
   });
 
   return (
@@ -87,12 +85,19 @@ function CountFile() {
               </div>
 
               <div>
+                {" "}
                 <input
                   id="envoyer"
                   type="submit"
                   className="btn btn-primary btn-style mt-4"
-                />
-                <button onClick={reset}>reset</button>
+                />{" "}
+                <br />
+                <button
+                  onClick={reset}
+                  className="btn btn-primary btn-style mt-4"
+                >
+                  reset
+                </button>
               </div>
             </form>
           </div>

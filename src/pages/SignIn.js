@@ -56,78 +56,78 @@ const SignIn = () => {
       });
   };
 
-  const resetpassword = async () => {
-    const config = {
-      headers: {
-        "content-type": "application/json",
-      },
-    };
+  // const resetpassword = async () => {
+  //   const config = {
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //   };
 
-    await axios
-      .post("http://localhost:3011/api/request/password", { email }, config)
-      .then((data) => {
-        let templateParams = {
-          name: "Mr or Mm",
-          Email: email,
-          message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
-        };
+  //   await axios
+  //     .post("http://localhost:3011/api/request/password", { email }, config)
+  //     .then((data) => {
+  //       let templateParams = {
+  //         name: "Mr or Mm",
+  //         Email: email,
+  //         message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
+  //       };
 
-        emailjs
-          .send(
-            "service_pk0af5q",
-            "template_lnq0ocu",
-            templateParams,
-            "user_TjkkGMETOdkygzIZjLVGS"
-          )
-          .then(
-            (result) => {
-              notification.success({ message: "Check you Email" });
-            },
-            (error) => {
-              notification.error({ message: error.text });
-            }
-          );
-      })
-      .catch((error) => {
-        notification.error({ message: "Email Not Found " });
-      });
-  };
+  //       emailjs
+  //         .send(
+  //           "service_pk0af5q",
+  //           "template_lnq0ocu",
+  //           templateParams,
+  //           "user_TjkkGMETOdkygzIZjLVGS"
+  //         )
+  //         .then(
+  //           (result) => {
+  //             notification.success({ message: "Check you Email" });
+  //           },
+  //           (error) => {
+  //             notification.error({ message: error.text });
+  //           }
+  //         );
+  //     })
+  //     .catch((error) => {
+  //       notification.error({ message: "Email Not Found " });
+  //     });
+  // };
 
-  const handleLogin = async (googleData) => {
-    const config = {
-      headers: {
-        "content-type": "application/json",
-      },
-    };
+  // const handleLogin = async (googleData) => {
+  //   const config = {
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //   };
 
-    console.log("token", googleData.tokenId);
+  //   console.log("token", googleData.tokenId);
 
-    await axios
-      .post(
-        "http://localhost:3011/api/google-login",
-        { token: googleData.tokenId },
-        config
-      )
-      .then(async (result) => {
-        const data = result.json();
-        await axios
-          .post(
-            "http://localhost:3011/api/loginGoogle",
-            { email: data.email },
-            config
-          )
-          .then((result) => {
-            localStorage.setItem("user", JSON.stringify(result.data.user));
-            localStorage.setItem("token", JSON.stringify(result.data.token));
-          })
-          .catch(() => {
-            notification.error({ message: "check your Email " });
-          });
-      })
-      .catch(() => {
-        notification.error({ message: "Error Service Google" });
-      });
-  };
+  //   await axios
+  //     .post(
+  //       "http://localhost:3011/api/google-login",
+  //       { token: googleData.tokenId },
+  //       config
+  //     )
+  //     .then(async (result) => {
+  //       const data = result.json();
+  //       await axios
+  //         .post(
+  //           "http://localhost:3011/api/loginGoogle",
+  //           { email: data.email },
+  //           config
+  //         )
+  //         .then((result) => {
+  //           localStorage.setItem("user", JSON.stringify(result.data.user));
+  //           localStorage.setItem("token", JSON.stringify(result.data.token));
+  //         })
+  //         .catch(() => {
+  //           notification.error({ message: "check your Email " });
+  //         });
+  //     })
+  //     .catch(() => {
+  //       notification.error({ message: "Error Service Google" });
+  //     });
+  // };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -202,10 +202,10 @@ const SignIn = () => {
                     SIGN IN
                   </Button>
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <a onClick={resetpassword}> Forget password ?</a>
-                </Form.Item>
-                <Form.Item>
+                </Form.Item> */}
+                {/* <Form.Item>
                   <GoogleLogin
                     clientId={
                       "383609296631-1rqh8hldbf76j1420idr4l0bhhab1lhr.apps.googleusercontent.com"
@@ -214,9 +214,8 @@ const SignIn = () => {
                     onSuccess={handleLogin}
                     cookiePolicy={"single_host_origin"}
                   ></GoogleLogin>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item>
-                  {" "}
                   <button
                     type="button"
                     class="btn btn-success"

@@ -6,16 +6,13 @@ import {
   Table,
   Upload,
   message,
-  Progress,
   Button,
   Avatar,
   Typography,
   Space,
   Tag,
   Tooltip,
-  Modal,
   Form,
-  Input,
   notification,
 } from "antd";
 import Swal from "sweetalert2";
@@ -176,7 +173,7 @@ function Tables() {
     };
 
     axios
-      .post("http://localhost:3010/api/getUserByRole", { role: role }, config)
+      .post("http://localhost:3011/api/getUserByRole", { role: role }, config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         setdata(response.data);
@@ -204,11 +201,11 @@ function Tables() {
       if (result.isConfirmed) {
         Swal.fire("Deleted!", "Your file has been deleted.", "success");
         axios
-          .delete("http://localhost:3010/api/deleteUser/" + _id, config)
+          .delete("http://localhost:3011/api/deleteUser/" + _id, config)
           .then(function (response) {
             axios
               .post(
-                "http://localhost:3010/api/getUserByRole",
+                "http://localhost:3011/api/getUserByRole",
                 { role: role },
                 config
               )

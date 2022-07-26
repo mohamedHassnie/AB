@@ -5,14 +5,17 @@ import Tablepatient from "./pages/Tablepatient";
 import Profile from "./pages/Profile";
 import add_file from "./pages/add_file";
 import SignUp from "./pages/SignUp";
-
+import listVacation from "./pages/vacation/List";
 import SignIn from "./pages/SignIn";
 import Main from "./components/layout/Main";
-import CountFile from "./pages/CountFile";
+import time from "./pages/TimeExecution";
 import "antd/dist/antd.css";
 import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import RestPassword from "./pages/RestPassword";
+import vacation from "./pages/vacation/Vocation";
+import configVacation from "./pages/vacation/configVacation";
+import mail from "./pages/masse_mailing/mail";
 
 function App() {
   return (
@@ -25,7 +28,6 @@ function App() {
           path="/profile/ressetpass/:id/:token"
           component={RestPassword}
         />
-        <Route exact path="/countFile" component={CountFile} />
 
         <Main>
           <Route exact path="/dashboard" component={Home} />
@@ -34,13 +36,18 @@ function App() {
           <Route exact path="/profile" component={Profile} />
 
           <Route exact path="/add_file" component={add_file} />
+          <Route exact path="/vacation" component={vacation} />
+          <Route exact path="/time" component={time} />
+          <Route exact path="/listVacation" component={listVacation} />
+          <Route exact path="/configVacation" component={configVacation} />
+          <Route exact path="/mail" component={mail} />
 
-          <Redirect from="*" to="/dashboard" />
-          {/* {!JSON.parse(localStorage.getItem("user")) ? (
+          {/* <Redirect from="*" to="/dashboard" /> */}
+          {!JSON.parse(localStorage.getItem("user")) ? (
             <Redirect to="/sign-in" />
           ) : (
             <Redirect to="/dashboard" />
-          )} */}
+          )}
         </Main>
       </Switch>
     </div>

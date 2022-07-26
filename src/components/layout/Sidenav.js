@@ -200,7 +200,7 @@ function Sidenav({ color }) {
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "",
+                  background: page === "Tablepatient" ? color : "red",
                 }}
               >
                 {dashboard}
@@ -215,12 +215,72 @@ function Sidenav({ color }) {
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "",
+                  background: page === "Tablepatient" ? color : "blue",
                 }}
               >
                 {dashboard}
               </span>
               <span className="label"> add file</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
+        <Fragment>
+          <Menu.Item key="4">
+            <NavLink to="/vacation">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Tablepatient" ? color : "blue",
+                }}
+              >
+                {dashboard}
+              </span>
+              <span className="label"> vacation</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
+        <Fragment>
+          <Menu.Item key="4">
+            <NavLink to="/listVacation">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Tablepatient" ? color : "red",
+                }}
+              >
+                {dashboard}
+              </span>
+              <span className="label"> list_Vacation</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
+        <Fragment>
+          <Menu.Item key="4">
+            <NavLink to="/time">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Tablepatient" ? color : "red",
+                }}
+              >
+                {dashboard}
+              </span>
+              <span className="label"> time éxecution</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
+        <Fragment>
+          <Menu.Item key="4">
+            <NavLink to="/mail">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Tablepatient" ? color : "red",
+                }}
+              >
+                {dashboard}
+              </span>
+              <span className="label"> masse mailing</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
