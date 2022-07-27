@@ -43,11 +43,11 @@ function App() {
           <Route exact path="/mail" component={mail} />
 
           {/* <Redirect from="*" to="/dashboard" /> */}
-          {!JSON.parse(localStorage.getItem("user")) ? (
+          {/* {!JSON.parse(localStorage.getItem("user")) ? (
             <Redirect to="/sign-in" />
           ) : (
             <Redirect to="/dashboard" />
-          )}
+          )} */}
         </Main>
       </Switch>
     </div>
