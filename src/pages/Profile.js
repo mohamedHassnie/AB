@@ -33,52 +33,73 @@ import BgProfile from "../assets/images/bg-profile.jpg";
 import profilavatar from "../assets/images/profil.jpg";
 import { formatCountdown } from "antd/lib/statistic/utils";
 import { useForm } from "antd/lib/form/Form";
+import { isAuthenticated } from "../helpers/auth";
+import { useHistory } from "react-router-dom";
 
 function Profile() {
   const [Editable, setEditable] = useState(false);
   const [Loading, setLoading] = useState(false);
-  const [UserName, setUserName] = useState();
-  const [LastName, setLastName] = useState("");
+
   const [form] = useForm();
   const [user, setuser] = useState({});
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+      authorization: JSON.parse(localStorage.getItem("token")),
+    },
+  };
 
-  const [email, setemail] = useState("");
-  const [Phone, setPhone] = useState("");
-  const [location, setlocation] = useState("");
-  const [filetoup, setfiletoup] = useState({});
-  const [img, setImageName] = useState("");
+  const hist = useHistory();
+
   useEffect(() => {
+    if (!isAuthenticated()) {
+      hist.push("/sign-in");
+    }
+
     const uu = JSON.parse(localStorage.getItem("user"));
     setuser(JSON.parse(localStorage.getItem("user")));
-
+    console.log("testttt", uu);
     form?.setFieldsValue({
       UserName: uu?.UserName,
       LastName: uu?.LastName,
       email: uu?.email,
-      Phone: uu?.Phone,
+      phone: uu?.phone,
       location: uu?.location,
     });
   }, []);
 
   const handleUpdate = (values) => {
-    console.log("ooooooooooooo", values, form.getFieldValue("LastName"));
+    console.log(
+      "ooooooooooooo",
+      values,
+      form.getFieldValue("LastName"),
+      JSON.parse(localStorage.getItem("token"))
+    );
 
     axios
-      .put("http://localhost:3011/api/UpdateUser/" + user.id, {
-        UserName: values.UserName,
-        LastName: values.LastName,
-        userImage: form.getFieldValue("UserImage"),
-        phone: values.phone,
-        location: values.location,
-        email: values.email,
-      })
+      .put(
+        "http://localhost:3017/api/UpdateUser/" + user.id,
+        {
+          UserName: values.UserName,
+          LastName: values.LastName,
+          userImage: form.getFieldValue("UserImage"),
+          phone: values.phone,
+          location: values.location,
+          email: values.email,
+        },
+        config
+      )
       .then((res) => {
         notification.success({ message: "Update done with success" });
-        console.log("testtt", res);
-        setuser({ ...res.data, id: res._id });
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...res.data, id: user.id })
+        );
+        console.log("tttttttttttttttt", { ...user, ...res.data });
+        setuser({ ...user, ...res.data });
       })
       .catch(() => {
-        notification.success({ message: "Error" });
+        notification.error({ message: "Error" });
       });
   };
 
@@ -102,13 +123,25 @@ function Profile() {
     </svg>
   );
 
-  let image = "";
   console.log("testtt", JSON.parse(localStorage.getItem("user")));
   // if (JSON.parse(localStorage.getItem("user"))?.userImage) {
   //   image = require("C:/project/back/images/" +
   //     JSON.parse(localStorage.getItem("user"))?.userImage);
   //   console.log("testtt", "C:/project/back/images/" + user?.userImage);
   // }
+
+  function importAll(r) {
+    let images = {};
+    r.keys().map((item, index) => {
+      images[item.replace("./", "")] = r(item);
+    });
+    return images;
+  }
+
+  const images = importAll(
+    require.context("../assets/uploads", false, /\.(png|jpg|jpe?g|svg)$/)
+  );
+
   return (
     <Form
       form={form}
@@ -136,8 +169,19 @@ function Profile() {
           <Row justify="space-between" align="middle" gutter={[24, 0]}>
             <Col span={24} md={12} className="col-info">
               <Avatar.Group>
-                <Avatar size={74} shape="square" />
-                {image !== "" && <Image width={200} src={image} />}
+                <Avatar
+                  size={74}
+                  icon={
+                    <Image
+                      width={70}
+                      height={70}
+                      src={images[user.userImage]?.default}
+                      alt={user.userImage}
+                    />
+                  }
+                  shape="square"
+                ></Avatar>
+
                 <div className="avatar-info">
                   <h4 className="font-semibold m-0">{user?.UserName}</h4>
                   <p>{user?.role}</p>
@@ -231,32 +275,45 @@ function Profile() {
                 )}
               </Descriptions.Item>
               <Descriptions.Item label="Image" span={3}>
-                {Editable && (
+                {Editable ? (
                   <Upload
                     onChange={({ file, fileList }) => {
-                      if (file.status !== "uploading") {
-                        console.log("filee", file);
+                      try {
+                        if (file.status !== "uploading") {
+                          console.log("filee", file);
 
-                        var bodyFormData = new FormData();
+                          var bodyFormData = new FormData();
 
-                        bodyFormData.append("userImage", file.originFileObj);
-                        form.setFieldsValue({
-                          UserImage: file.originFileObj.name,
-                        });
-                        axios({
-                          method: "post",
-                          url: "http://localhost:3011/api/upload",
-                          data: bodyFormData,
-                          headers: { "Content-Type": "multipart/form-data" },
-                        })
-                          .then(function (respnse) {
-                            //handle success
-                            console.log(respnse);
-                          })
-                          .catch(function (response) {
-                            //handle error
-                            console.log(response);
+                          bodyFormData.append("userImage", file.originFileObj);
+                          form.setFieldsValue({
+                            UserImage: file.originFileObj.name,
                           });
+
+                          axios({
+                            method: "post",
+                            url: "http://localhost:3017/api/upload",
+                            data: bodyFormData,
+                            headers: { "Content-Type": "multipart/form-data" },
+                          })
+                            .then(function (respnse) {
+                              //handle success
+                              console.log(respnse);
+                              setuser({
+                                ...user,
+                                userImage: file.originFileObj.name,
+                              });
+                            })
+                            .catch(function (response) {
+                              //handle error
+                              console.log(response);
+                              setuser({
+                                ...user,
+                                userImage: file.originFileObj.name,
+                              });
+                            });
+                        }
+                      } catch (err) {
+                        console.log(err);
                       }
                     }}
                     progress={{
@@ -270,6 +327,12 @@ function Profile() {
                   >
                     <Button icon={<UploadOutlined />}>Click to Upload</Button>
                   </Upload>
+                ) : (
+                  <Image
+                    width={100}
+                    src={images[user.userImage]?.default}
+                    alt={user.userImage}
+                  />
                 )}
               </Descriptions.Item>
             </Descriptions>

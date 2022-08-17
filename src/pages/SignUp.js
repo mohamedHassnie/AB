@@ -8,10 +8,13 @@ import {
   Input,
   Checkbox,
   notification,
+  Select,
+  InputNumber,
+  Radio,
+  Row,
+  Col,
 } from "antd";
 
-import Swal from "sweetalert2";
-import "./add_patient.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -19,262 +22,263 @@ const { Title } = Typography;
 const { Content } = Layout;
 
 const SignUp = () => {
-  const [UserName, setUserName] = useState("");
-  const [LastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setphone] = useState("");
-  const [Nationality, setNationality] = useState("");
-  const [Date_of_birth, setDate_of_birth] = useState("");
-  const [location, setLocation] = useState("");
-
-  const [Gender, setGender] = useState("");
-
-  const [selected, setSelected] = useState("");
+  const his = useHistory();
 
   const onFinish = async (values) => {
-    console.log("Success:", values);
-    const data = {
-      UserName: UserName,
-      LastName: LastName,
-      email: email,
-      phone: phone,
-      Nationality: Nationality,
-      Date_of_birth: Date_of_birth,
-      Gender: Gender,
-      location: location,
-      Type_Analyse: selected,
-    };
-    const config = {
-      headers: {
-        "content-type": "application/json",
-      },
-    };
+    if (values.remember === false)
+      notification.error({ message: "please agree to ower term !" });
+    else {
+      console.log("Success:", values);
+      const data = {
+        ...values,
+        Gender: values.gender.target.value,
+      };
+      const config = {
+        headers: {
+          "content-type": "application/json",
+          authorization: JSON.parse(localStorage.getItem("token")),
+        },
+      };
 
-    await axios
-      .post("http://localhost:3011/api/signUpPatient", data, config)
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          title: "message",
-          text: response.data.successMessage,
+      await axios
+        .post("http://localhost:3017/api/signUpPatient", data, config)
+        .then((response) => {
+          notification.success({ message: response.data.successMessage });
+          his.push("/sign-in");
+        })
+        .catch((err) => {
+          notification.error({ message: "check your data " });
+          console.log(err);
         });
-      })
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "message",
-          text: "check your data",
-        });
-      });
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
     notification.error({ message: "check your data " });
   };
-
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setSelected(event.target.value);
-  };
-  const onChangeGender = (event) => {
-    setGender(event.target.value);
-  };
+  const options = [
+    { label: "Male", value: "Male" },
+    { label: "Female", value: "Female" },
+  ];
   return (
     <>
-      <div
-        style={{
-          backgroundImage:
-            "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZI_vUJAFQNTqsS_Ew7l1JQiFQVmr5YnG_Bg&usqp=CAU)",
-        }}
-      >
-        (
-        <div className="container register">
-          <div className="row">
-            <div className="col-md-3 register-left">
-              <p>texte ...</p>
-
-              <br />
-              <br />
-
-              <br />
-              {/* <h3 style={{ fontFamily: "initial" }}>Welcome </h3> */}
-            </div>
-            <div className="col-md-9 register-right">
-              <Form onFinish={onFinish}>
-                <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="home"
-                    role="tabpanel"
-                    aria-labelledby="home-tab"
-                  >
-                    <h3 className="register-heading">Registre_Patient</h3>
-                    <div className="row register-form">
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <input
-                            placeholder="UserName*"
-                            type="texte"
-                            onChange={(e) => setUserName(e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            placeholder="LastName*"
-                            type="texte"
-                            onChange={(e) => setLastName(e.target.value)}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            placeholder="Location*"
-                            type="texte"
-                            onChange={(e) => setLocation(e.target.value)}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            placeholder="Nationality*"
-                            type="texte"
-                            onChange={(e) => setNationality(e.target.value)}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <div className="maxl" onChange={onChangeGender}>
-                            <label className="radio inline">
-                              <input type="radio" name="gender" value="femme" />
-                              <span> female </span>
-                            </label>
-                            &nbsp; &nbsp;
-                            <label className="radio inline">
-                              <input
-                                handleChangeGender
-                                type="radio"
-                                name="gender"
-                                value="Homme"
-                              />
-                              <span>Male </span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            type="email"
-                            placeholder="Your Email *"
-                            onChange={(e) => setEmail(e.target.value)}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            placeholder="Your Phone *"
-                            type="tel"
-                            onChange={(e) => setphone(e.target.value)}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <select
-                            className="form-control"
-                            value={selected}
-                            onChange={handleChange}
-                          >
-                            <option value="" disabled>
-                              Type Analyse
-                            </option>
-                            <option value="Swab">Swab</option>
-                            <option value="Spit">Spit</option>
-                            <option value="Blood">Blood</option>
-                          </select>
-                        </div>
-                        <div className="form-group">
-                          <input
-                            className="form-control"
-                            placeholder="Date_of_birth*"
-                            type="date"
-                            onChange={(e) => setDate_of_birth(e.target.value)}
-                          />
-                        </div>
-                        <input
-                          type="submit"
-                          className="btnRegister"
-                          defaultValue="Register"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="tab-pane fade show"
-                    id="profile"
-                    role="tabpanel"
-                    aria-labelledby="profile-tab"
-                  >
-                    <h3 className="register-heading">Apply as a Hirer</h3>
-                    <div className="row register-form">
-                      <div className="col-md-6">
-                        <div className="form-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="First Name *"
-                            defaultValue
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Last Name *"
-                            defaultValue
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            type="email"
-                            className="form-control"
-                            placeholder="Email *"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <input
-                            type="text"
-                            maxLength={10}
-                            minLength={10}
-                            className="form-control"
-                            placeholder="Phone *"
-                            defaultValue
-                          />
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <input
-                          type="submit"
-                          className="btnRegister"
-                          defaultValue="Register"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Form>
+      <div className="layout-default ant-layout layout-sign-up">
+        <Content className="p-0">
+          <div className="sign-up-header">
+            <div className="content">
+              <Title>Sign Up</Title>
+              <p className="text-lg">Welcome</p>
             </div>
           </div>
-        </div>
-        );
+
+          <Card
+            className="card-signup header-solid h-full ant-card pt-0"
+            bordered="false"
+          >
+            <Form
+              name="basic"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              className="row-col"
+            >
+              <Row justify="space-between" gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="UserName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your username!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="UserName" type="texte" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="LastName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your LastName!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="LastName" type="texte" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="space-between" gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="location"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your location!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="location" type="texte" />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="email"
+                    rules={[
+                      { required: true, message: "Please input your email!" },
+                    ]}
+                  >
+                    <Input placeholder="email" type="email" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="space-between" gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="phone"
+                    rules={[
+                      { required: true, message: "Please input your pphone!" },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        border: "1px solid #d9d9d9",
+                        borderRadius: "6px",
+                      }}
+                      placeholder="phone"
+                      type="phone"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="Contact_number"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Contact_number!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Contact_number" type="tel" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="space-between" gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="Nationality"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Nationality!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder="Nationality"
+                      style={{
+                        width: "100%",
+                      }}
+                      type="texte"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="gender"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your gender!",
+                      },
+                    ]}
+                    valuePropName="radio"
+                  >
+                    <Radio.Group
+                      options={options}
+                      style={{ width: "100%" }}
+                      buttonStyle="solid"
+                      optionType="button"
+                    ></Radio.Group>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="space-between" gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    name="Type_Analyse"
+                    type="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Type_Analyse!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Type Analyse"
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        border: "1px solid #d9d9d9",
+                        borderRadius: "6px",
+                      }}
+                      bordered={false}
+                    >
+                      <Select.Option value="Swab">Swab</Select.Option>
+                      <Select.Option value="Spit">Spit</Select.Option>
+                      <Select.Option value="Blood">Blood</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    name="Date_of_birth"
+                    type="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Date_of_birth!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      style={{ width: "100%", height: "40px" }}
+                      placeholder="Date_of_birth"
+                      type="date"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="center">
+                <Form.Item name="remember" valuePropName="checked">
+                  <Checkbox>
+                    I agree the{" "}
+                    <a href="#pablo" className="font-bold text-dark">
+                      Terms and Conditions
+                    </a>
+                  </Checkbox>
+                </Form.Item>
+              </Row>
+              <Form.Item>
+                <Button
+                  style={{ width: "100%" }}
+                  type="primary"
+                  htmlType="submit"
+                >
+                  SIGN UP
+                </Button>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Content>
       </div>
-      {/* <div>
-        <img
-          src="https://abiomix.com/front/images/Bioinformatics%20Made%20Easy.svg"
-          alt=""
-          style={{ width: "100%", height: "100" }}
-        ></img>
-      </div> */}
     </>
   );
 };

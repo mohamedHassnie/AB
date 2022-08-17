@@ -1,15 +1,28 @@
 import React, { useEffect } from "react";
-import { axios } from "axios";
 
 import { useState } from "react";
 
-import { Row, Col, Table, Typography } from "antd";
+import {
+  Row,
+  Col,
+  Table,
+  Typography,
+  Form,
+  Card,
+  notification,
+  DatePicker,
+  Select,
+  Button,
+} from "antd";
+import { useForm } from "antd/lib/form/Form";
+import axios from "axios";
+import TextArea from "antd/lib/input/TextArea";
 
 const { Title } = Typography;
 export default function Vocation() {
-  const [DataDebut, setDateDebut] = useState("");
-  const [DateFin, setDateFin] = useState("");
   const [hist, sethist] = useState([]);
+  const [reload, setreload] = useState(false);
+  const [form] = useForm();
 
   let year = new Date().getFullYear();
   const columns = [
@@ -28,7 +41,7 @@ export default function Vocation() {
     },
     {
       title: "endingDate",
-      dataIndex: "date fin",
+      dataIndex: "endingDate",
       key: "endingDate",
       render: (val) => {
         return (
@@ -80,137 +93,91 @@ export default function Vocation() {
     },
   ];
 
-  function handlePost() {
+  function handleonfinish(values) {
     const config = {
       headers: {
         "content-type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
+        authorization: JSON.parse(localStorage.getItem("token")),
       },
     };
-    const data = {
-      startingDate: DataDebut,
-      endingDate: DateFin,
-    };
+
     axios
-      .post("https://localhost:3011/api/vacation", data, config)
-      .then((response) => console.log(response))
+      .post(
+        "http://localhost:3017/api/vacation",
+        {
+          startingDate: values.startdate,
+          endingDate: values.enddate,
+          type_vacation: values.type,
+          message: values.facultative,
+        },
+        config
+      )
+      .then((response) => setreload(!reload))
       .catch((err) => console.log(err));
   }
-
-  // useEffect(() => {
-  //   const config = {
-  //     headers: {
-  //       "content-type": "application/json",
-  //       Authorization: "Bearer " + localStorage.getItem("token"),
-  //     },
-  //   };
-
-  //   axios
-  //     .get("http://localhost:3011/api/historiqueVaccation", config)
-  //     .then((res) => {
-  //       sethist(res.data);
-  //     })
-  //     .catch(() => {
-  //       notification.error({ message: " No user is found " });
-  //     });
-  // }, []);
+  const config = {
+    headers: {
+      "content-type": "application/json",
+      authorization: JSON.parse(localStorage.getItem("token")),
+    },
+  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:3017/api/historiqueVaccation", config)
+      .then((reponse) => {
+        if (reponse) {
+          sethist(reponse.data.data);
+        }
+      });
+  }, [reload]);
 
   return (
-    <div>
-      <div className="form-group" style={{ width: "550px" }}>
-        <div>
-          <div>
-            <h3
-              className="form-control"
-              style={{
-                height: "50px",
-                color: "black",
-                backgroundColor: "#F0FFFF",
-              }}
-            >
-              Demande congé
-              {JSON.parse(localStorage.getItem("user"))?.UserName}
-            </h3>
-          </div>
-          <br></br>
-
-          <label style={{ color: "black" }}>date debut *</label>
-          <input
-            className="form-control"
-            type="date"
-            onChange={(e) => setDateDebut(e.target.value)}
-          />
-          <br></br>
-          <label style={{ color: "black" }}>date Fin *</label>
-          <input
-            className="form-control"
-            type="date"
-            onChange={(e) => setDateFin(e.target.value)}
-          />
-
-          <br />
-
-          <select className="form-control">
-            <option
-              style={{
-                color: "red",
-              }}
-              value=""
-              disabled
-            >
-              type
-            </option>
-            <option value="">maladie</option>
-            <option value="">Normal</option>
-          </select>
-
-          <br />
-          <label style={{ color: "black" }}>Facultative</label>
-          <textarea
-            type="textarea"
-            placeholder="reason"
-            className="form-control"
-          />
-
-          <br />
-
-          <button
-            style={{ width: "100%" }}
-            className="btn btn-success"
-            onClick={(e) => {
-              e.preventDefault();
-              handlePost();
-            }}
-          >
-            envoyer
-          </button>
-        </div>
-        <br />
-        <br />
-        <div>
-          <h3
-            className="form-control"
-            style={{
-              height: "50px",
-              color: "black",
-              backgroundColor: "#F0FFFF",
-            }}
-          >
-            Historigue Congé Pour{" "}
-            {JSON.parse(localStorage.getItem("user"))?.UserName} de l'anneé :
-            {year}
-          </h3>
-        </div>
-      </div>
-      <Row style={{ width: "90%", border: "4px " }}>
-        <Col span={24}>
-          <Table
-            columns={columns}
-            dataSource={hist}
-            pagination={{ responsive: true }}
-          />
+    <Form form={form} onFinish={handleonfinish} layout="vertical">
+      <Row gutter={16}>
+        <Col span={7}>
+          <Card type="inner" size="small" title="Demande de congé">
+            <Row justify="start" gutter={16}>
+              <Col span={12}>
+                <Form.Item label="date de debut" name="startdate">
+                  <DatePicker format="YYYY-MM-DD" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="date de fin" name="enddate">
+                  <DatePicker format="YYYY-MM-DD" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Form.Item label="type" name="type">
+              <Select style={{ width: "100%" }}>
+                <Select.Option value="maladie">maladie</Select.Option>
+                <Select.Option value="normale">Normal</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="Facultative" name="facultative">
+              <TextArea rows={4} />
+            </Form.Item>
+            <Row>
+              <Button
+                type="primary"
+                style={{ width: "100%" }}
+                htmlType="submit"
+              >
+                envoyer
+              </Button>
+            </Row>
+          </Card>
+        </Col>
+        <Col span={16}>
+          <Card type="inner" size="small" title="Historique de congé">
+            <Table
+              columns={columns}
+              dataSource={hist}
+              pagination={{ responsive: true }}
+            />
+          </Card>
         </Col>
       </Row>
-    </div>
+    </Form>
   );
 }

@@ -11,14 +11,16 @@ export const setAuthentication = (token, user) => {
 };
 
 export const isAuthenticated = () => {
-  if (getLocalStorage("token") && getLocalStorage("user")) {
-    return getLocalStorage("user");
+  if (
+    localStorage.getItem("token") !== null &&
+    localStorage.getItem("user") !== null
+  ) {
+    return true;
   } else {
     return false;
   }
 };
 
 export const logout = () => {
-  deleteLocalStorage("token");
-  deleteLocalStorage("user");
+  localStorage.clear();
 };

@@ -3,13 +3,18 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "antd";
 import add_file from "./add_file";
+import { useHistory } from "react-router-dom";
+import { isAuthenticated } from "../helpers/auth";
 const CountFile = () => {
   const [countFileCSV, setCountFileCSV] = useState(1);
   const [countFileVCF, setCountFileVCF] = useState(1);
   const [reponsErr, SetreponsErr] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3011/api/getCount").then((reponse) => {
+    if (!isAuthenticated()) {
+      hist.push("/sign-in");
+    }
+    axios.get("http://localhost:3017/api/getCount").then((reponse) => {
       // console.log("hhh", reponse);
       // console.log("ttt", reponse.data);
       if (reponse) {
@@ -21,6 +26,8 @@ const CountFile = () => {
       }
     });
   });
+
+  const hist = useHistory();
 
   return (
     <p

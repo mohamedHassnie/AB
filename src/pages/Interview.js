@@ -17,7 +17,10 @@ import {
   Form,
   Input,
   notification,
+  List,
 } from "antd";
+import moment from "moment";
+
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -30,19 +33,16 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import AddOrUpdateModalPatient from "./AddOrUpdateModalPatien";
+import AddOrUpdateModalPatient from "./AddOrUpdateModalInetview";
 import { isAuthenticated } from "../helpers/auth";
 const { Title } = Typography;
-function Tablepatient() {
+function Interview() {
   const [data, setdata] = useState([]);
   const [Loading, setLoading] = useState(false);
-  const [user, setUser] = useState([]);
   const [refetech, setrefetech] = useState(false);
-  const [key, setKey] = useState("");
-
-  const [visibleE, setVisibleE] = useState(false);
+  const [visibleIn, setvisibleIn] = useState(false);
+  const [visibleInE, setvisibleInE] = useState(false);
   const [record, setrecord] = useState({});
-  const { form } = useForm();
 
   const handrefetech = () => {
     setrefetech(!refetech);
@@ -52,9 +52,9 @@ function Tablepatient() {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "UserName",
-      key: "name",
+      title: "status",
+      dataIndex: "status",
+      key: "status",
       render: (val) => {
         return (
           <div className="avatar-info">
@@ -66,9 +66,22 @@ function Tablepatient() {
     },
 
     {
-      title: "Prénom",
-      dataIndex: "LastName",
-      key: "LastName",
+      title: "date_entretient",
+      dataIndex: "date_entretient",
+      key: "date_entretient",
+      render: (val) => {
+        return (
+          <div className="avatar-info">
+            <Title level={5}>{moment(val).format("YYYY-MM-DD")}</Title>
+          </div>
+        );
+      },
+      width: "20%",
+    },
+    {
+      title: "type",
+      dataIndex: "type",
+      key: "type",
       render: (val) => {
         return (
           <div className="avatar-info">
@@ -79,22 +92,9 @@ function Tablepatient() {
       width: "20%",
     },
     {
-      title: "email",
-      dataIndex: "email",
-      key: "email",
-      render: (val) => {
-        return (
-          <div className="avatar-info">
-            <Title level={5}>{val}</Title>
-          </div>
-        );
-      },
-      width: "20%",
-    },
-    {
-      title: "Mobile",
-      dataIndex: "Contact_number",
-      key: "Contact_number",
+      title: "interview",
+      dataIndex: "interview",
+      key: "interview",
       render: (val) => {
         return (
           <div className="author-info">
@@ -105,29 +105,19 @@ function Tablepatient() {
       width: "20%",
     },
     {
-      title: "Nationality",
-      dataIndex: "Nationality",
+      title: "interv",
+      dataIndex: "interv",
       render: (val, record) => {
         return (
-          <div className="author-info">
-            <Title level={5}>{val}</Title>
-          </div>
+          <ul>
+            {val.map((elem) => (
+              <div className="author-info">
+                <li>{elem.email}</li>
+              </div>
+            ))}
+          </ul>
         );
       },
-      width: "20%",
-    },
-
-    {
-      title: "Date_of_birth",
-      dataIndex: "Date_of_birth",
-      render: (val, record) => {
-        return (
-          <div className="author-info">
-            <Title level={5}>{val.toString().slice(0, 10)}</Title>
-          </div>
-        );
-      },
-
       width: "20%",
     },
     {
@@ -141,7 +131,7 @@ function Tablepatient() {
               icon={<EditOutlined />}
               onClick={(e) => {
                 setrecord(record);
-                setVisibleE(true);
+                setvisibleInE(true);
               }}
             >
               Edit
@@ -167,18 +157,18 @@ function Tablepatient() {
     }
 
     axios
-      .get("http://localhost:3017/api/getPatient", config)
+      .get("http://localhost:3017/api/getEntretient", config)
       .then((res) => {
         setdata(res.data);
       })
       .catch(() => {
-        notification.error({ message: " No user is found " });
+        notification.error({ message: " No interview is found " });
       });
   }, [refetech]);
 
   const handleDelete = async (id) => {
     await axios
-      .delete(`http://localhost:3017/api/deletePatient/${id}`, config)
+      .get("http://localhost:3017/api/deleteEntretient/" + id, config)
       .then(function (response) {
         handrefetech();
       })
@@ -187,53 +177,28 @@ function Tablepatient() {
       });
   };
 
-  const handleSearch = async () => {
-    setLoading(true);
-    let resultat = await fetch(
-      `http://localhost:3017/api/searchPatient/${key ? key : "all"}`,
-      config
-    );
-
-    await resultat
-      .json()
-      .then((resultat) => {
-        if (resultat) {
-          setLoading(false);
-          setdata(resultat);
-        } else {
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-  };
   return (
     <div className="tabled">
       <Card>
-        <Row justify="end" gutter={16}>
-          <Col span={4}>
-            <Input
-              style={{ width: "100%" }}
-              onChange={(e) => {
-                setKey(e.target.value);
+        <Row justify="end">
+          <Tooltip title="Add">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={
+                <PlusOutlined
+                  style={{
+                    position: "relative",
+                    margin: "5px 0px 5px 5px",
+                  }}
+                />
+              }
+              size="large"
+              onClick={() => {
+                setvisibleIn(true);
               }}
             />
-          </Col>
-          <Col span={2}>
-            <Button
-              icon={<SearchOutlined />}
-              type="primary"
-              onClick={handleSearch}
-            >
-              Search
-            </Button>
-          </Col>
-        </Row>
-        <Row justify="start">
-          <Typography.Text strong>
-            <Link to="/sign-up">Create New Patient</Link>
-          </Typography.Text>
+          </Tooltip>
         </Row>
         <Row style={{ width: "100%" }}>
           <Col span={24}>
@@ -247,13 +212,21 @@ function Tablepatient() {
         </Row>
       </Card>
       <AddOrUpdateModalPatient
-        visible={visibleE}
+        visible={visibleIn}
         record={record}
+        type="ADD"
         refetech={handrefetech}
-        onCancel={() => setVisibleE(false)}
+        onCancel={() => setvisibleIn(false)}
+      />
+      <AddOrUpdateModalPatient
+        visible={visibleInE}
+        record={record}
+        type="EDIT"
+        refetech={handrefetech}
+        onCancel={() => setvisibleInE(false)}
       />
     </div>
   );
 }
 
-export default Tablepatient;
+export default Interview;

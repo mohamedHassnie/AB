@@ -1787,15 +1787,15 @@ body {
   display: none;
 }
 .sign-up-header {
-  height: 550px;
-  margin-top: -62.8px;
-  padding-top: 137.8px;
+  height: 450px;
+  margin-top: -50.8px;
+  padding-top: 40px;
   border-radius: 12px;
   box-shadow: 0 20px 27px rgb(0 0 0 / 5%);
   background-size: cover;
   background-position: 50%;
   text-align: center;
-  background: url("../images/bg-signup.jpg") no-repeat center top;
+  background: url("../images/bg-signup.jpg") no-repeat center top ;
 }
 .header-col.header-brand {
   white-space: nowrap;
@@ -1856,7 +1856,7 @@ body {
   margin: auto;
   box-shadow: 0 20px 27px rgb(0 0 0 / 5%);
   border-radius: 12px;
-  margin-top: -190px;
+  margin-top: -300px;
   margin-bottom: 20px;
 }
 .card-signup h5 {

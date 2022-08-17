@@ -5,6 +5,8 @@ import { notification } from "antd";
 import Creatable from "react-select/creatable";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { isAuthenticated } from "../helpers/auth";
+import { useHistory } from "react-router-dom";
 const { Option } = Select;
 const AddOrUpdateModal = (props) => {
   const customStyles = {
@@ -20,15 +22,21 @@ const AddOrUpdateModal = (props) => {
   const [form] = useForm();
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      hist.push("/sign-in");
+    }
     console.log("teswttt", props.record);
 
     form.setFieldsValue({ ...props.record, password: "" });
   }, [form, props.record, props.visible]);
 
+  const hist = useHistory();
+
   const handleonfinish = async (val) => {
     const config = {
       headers: {
         "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
       },
     };
 
@@ -36,14 +44,12 @@ const AddOrUpdateModal = (props) => {
       const values = { ...val, role: form.getFieldValue("role") };
 
       await axios
-        .post("http://localhost:3011/api/addUser", values, config)
+        .post("http://localhost:3017/api/addUser", values, config)
         .then((response) => {
-          Swal.fire({
-            icon: "success",
-            title: "message",
-            text: response.data.successMessage,
-          });
+          notification.success({ message: "User added" });
+
           onCancel();
+          props.refetech();
         })
         .catch((err) => {
           notification.error({ message: "check your Data " });
@@ -58,10 +64,15 @@ const AddOrUpdateModal = (props) => {
       };
 
       await axios
-        .put("http://localhost:3010/api/UpdateUser/" + values._id, values)
+        .put(
+          "http://localhost:3017/api/UpdateUser/" + values._id,
+          values,
+          config
+        )
         .then(function (response) {
           notification.success({ message: "Update Done  " });
           onCancel();
+          props.refetech();
         })
         .catch(function (err) {
           notification.error({ message: "check your Data " });

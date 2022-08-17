@@ -1,8 +1,18 @@
 // import { useState } from "react";
+import {
+  ContactsFilled,
+  FileAddFilled,
+  MailFilled,
+  PieChartFilled,
+  ProfileFilled,
+  ScheduleFilled,
+  SettingFilled,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { Menu, Button } from "antd";
 import { Fragment } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import logo from "../../assets/images/ooo.jpg";
+import logo from "../../assets/images/ooo.png";
 import { isAuthenticated } from "../../helpers/auth";
 
 function Sidenav({ color }) {
@@ -157,14 +167,14 @@ function Sidenav({ color }) {
   return (
     <>
       <div className="brand">
-        <img src={logo} alt="" style={{ width: "200px", height: "100px" }} />
+        <img src={logo} alt="" style={{ width: "200px", height: "70px" }} />
       </div>
       <hr /> <br /> <br />
-      <Menu theme="dark" mode="inline">
+      <Menu theme="dark" mode="inline" style={{zIndex:1}}>
         {/* <img src={logo} alt="" /> */}
         <br />
 
-        <Fragment>
+        <Fragment style={{zIndex:1}}>
           <Menu.Item key="1">
             <NavLink to="/dashboard">
               <span
@@ -173,94 +183,109 @@ function Sidenav({ color }) {
                   background: page === "dashboard" ? color : "",
                 }}
               >
-                {dashboard}
+            <PieChartFilled />
               </span>
               <span className="label">Dashboard</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
-          <Menu.Item key="3">
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="2">
             <NavLink to="/tables">
               <span
                 className="icon"
                 style={{
-                  background: page === "sign-up" ? color : "",
+                  background: page === "tables" ? color : "",
                 }}
               >
-                {dashboard}
+                <SettingFilled />
               </span>
               <span className="label">Setting_User</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
-          <Menu.Item key="4">
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="3">
             <NavLink to="/Tablepatient">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "red",
+                  background: page === "Tablepatient" ? color : "",
                 }}
               >
-                {dashboard}
+                <ContactsFilled />{" "}
               </span>
               <span className="label"> Patient</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
+        <Fragment style={{zIndex:1}}>
           <Menu.Item key="4">
             <NavLink to="/add_file">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "blue",
+                  background: page === "add_file" ? color : "",
                 }}
               >
-                {dashboard}
+                <FileAddFilled />{" "}
               </span>
               <span className="label"> add file</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
-          <Menu.Item key="4">
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="5">
             <NavLink to="/vacation">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "blue",
+                  background: page === "vacation" ? color : "",
                 }}
               >
-                {dashboard}
+                <ScheduleFilled />
               </span>
               <span className="label"> vacation</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
-          <Menu.Item key="4">
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="6">
             <NavLink to="/listVacation">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "red",
+                  background: page === "listVacation" ? color : "",
                 }}
               >
-                {dashboard}
+                <ProfileFilled />
               </span>
               <span className="label"> list_Vacation</span>
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment>
-          <Menu.Item key="4">
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="8">
+            <NavLink to="/Interview">
+              <span
+                className="icon"
+                style={{
+                  background: page === "Interview" ? color : "",
+                }}
+              >
+                <ProfileFilled />
+              </span>
+              <span className="label"> Interview</span>
+            </NavLink>
+          </Menu.Item>
+        </Fragment>
+        {/* <Fragment style={{zIndex:1}}>
+          <Menu.Item key="7">
             <NavLink to="/time">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "red",
+                  background: page === "time" ? color : "",
                 }}
               >
                 {dashboard}
@@ -268,17 +293,17 @@ function Sidenav({ color }) {
               <span className="label"> time éxecution</span>
             </NavLink>
           </Menu.Item>
-        </Fragment>
-        <Fragment>
-          <Menu.Item key="4">
+        </Fragment> */}
+        <Fragment style={{zIndex:1}}>
+          <Menu.Item key="8">
             <NavLink to="/mail">
               <span
                 className="icon"
                 style={{
-                  background: page === "Tablepatient" ? color : "red",
+                  background: page === "mail" ? color : "",
                 }}
               >
-                {dashboard}
+                <MailFilled />
               </span>
               <span className="label"> masse mailing</span>
             </NavLink>

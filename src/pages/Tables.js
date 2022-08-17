@@ -5,6 +5,7 @@ import {
   Radio,
   Table,
   Upload,
+  Image,
   message,
   Button,
   Avatar,
@@ -28,6 +29,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/lib/form/Form";
 import AddOrUpdateModal from "./AddOrUpdateModal";
+import { isAuthenticated } from "../helpers/auth";
 
 const { Title } = Typography;
 function Tables() {
@@ -35,8 +37,24 @@ function Tables() {
   const [visibleE, setVisibleE] = useState(false);
   const [record, setrecord] = useState({});
   const [data, setdata] = useState([]);
-  const [role, setRole] = useState([]);
+  const [role, setRole] = useState("ALL");
+  const [refetech, setrefetech] = useState(false);
+
   const { form } = useForm();
+
+  const hist = useHistory();
+
+  function importAll(r) {
+    let images = {};
+    r.keys().map((item, index) => {
+      images[item.replace("./", "")] = r(item);
+    });
+    return images;
+  }
+
+  const images = importAll(
+    require.context("../assets/uploads", false, /\.(png|jpg|jpe?g|svg)$/)
+  );
 
   const columns = [
     {
@@ -49,8 +67,15 @@ function Tables() {
             <Avatar
               className="shape-avatar"
               shape="square"
-              size={40}
-              src={record.img} //image like DB 'img'
+              size={70}
+              icon={
+                <Image
+                  width={70}
+                  height={70}
+                  src={images[record.userImage]?.default}
+                  alt={record.userImage}
+                />
+              }
             ></Avatar>
             <div className="avatar-info">
               <Title level={5}>{val}</Title>
@@ -165,15 +190,23 @@ function Tables() {
     },
   ];
 
+  const handrefetech = () => {
+    setrefetech(!refetech);
+  };
   useEffect(() => {
+    if (!isAuthenticated()) {
+      hist.push("/sign-in");
+    }
+
     const config = {
       headers: {
         "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
       },
     };
 
     axios
-      .post("http://localhost:3011/api/getUserByRole", { role: role }, config)
+      .post("http://localhost:3017/api/getUserByRole", { role: role }, config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         setdata(response.data);
@@ -181,12 +214,13 @@ function Tables() {
       .catch(function (err) {
         console.log(err);
       });
-  }, [role]);
+  }, [role, refetech]);
 
   const heldeDelete = async (_id) => {
     const config = {
       headers: {
         "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
       },
     };
     Swal.fire({
@@ -199,13 +233,13 @@ function Tables() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        notification.success({ message: "deleted" });
         axios
-          .delete("http://localhost:3011/api/deleteUser/" + _id, config)
+          .delete("http://localhost:3017/api/deleteUser/" + _id, config)
           .then(function (response) {
             axios
               .post(
-                "http://localhost:3011/api/getUserByRole",
+                "http://localhost:3017/api/getUserByRole",
                 { role: role },
                 config
               )
@@ -240,6 +274,7 @@ function Tables() {
                       setRole(e.target.value);
                       console.log("aaaa", e);
                     }}
+                    defaultValue="ALL"
                   >
                     <Radio.Button value="ALL" name="role">
                       ALL
@@ -287,11 +322,13 @@ function Tables() {
       <AddOrUpdateModal
         visible={visibleE}
         record={record}
+        refetech={handrefetech}
         onCancel={() => setVisibleE(false)}
         type="EDIT"
       />
       <AddOrUpdateModal
         visible={visible}
+        refetech={handrefetech}
         onCancel={() => setVisible(false)}
         type="ADD"
       />

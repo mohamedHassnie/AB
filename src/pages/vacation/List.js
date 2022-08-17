@@ -11,39 +11,81 @@ import {
   Space,
   Button,
   Radio,
+  Form,
+  Card,
+  Select,
+  InputNumber,
+  Image,
+  Drawer,
+  notification,
 } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, SettingOutlined } from "@ant-design/icons";
+import { useForm } from "antd/lib/form/Form";
+import moment from "moment";
 const { Title } = Typography;
 const List = () => {
   const [Data, setData] = useState([]);
   const [selected, setSelected] = useState("");
   const [value, setValue] = useState(1);
+  const [hist, sethist] = useState([]);
+  const [reload, setreload] = useState(false);
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
+  let year = new Date().getFullYear();
+
+  const [form] = useForm();
+
+  function importAll(r) {
+    let images = {};
+    r.keys().map((item, index) => {
+      images[item.replace("./", "")] = r(item);
+    });
+    return images;
+  }
+
+  const images = importAll(
+    require.context("../../assets/uploads", false, /\.(png|jpg|jpe?g|svg)$/)
+  );
+
   const columns = [
     {
-      title: "Name",
-      dataIndex: "UserName",
+      title: "User image",
+      dataIndex: "Userimage",
       key: "name",
       render: (val, record) => {
+        console.log();
         return (
           <Avatar.Group onChange={onChange} value={value}>
             <Avatar
               className="shape-avatar"
               shape="square"
-              size={40}
-              src={record.img} //image like DB 'img'
+              size={70}
+              icon={
+                <Image
+                  width={70}
+                  height={70}
+                  src={images[record.userId.userImage]?.default}
+                  alt={record.userId.userImage}
+                />
+              }
             ></Avatar>
-            <div className="avatar-info">
-              <Title level={5}>{val}</Title>
-              <p>{record.email}</p>
-            </div>
+            <Title level={5}>{val}</Title>
+            <p>{record.email}</p>
           </Avatar.Group>
         );
       },
-      width: "13%",
+      width: "10%",
+    },
+    {
+      title: "Name",
+      dataIndex: "UserName",
+      key: "name",
+      render: (val, record) => {
+        return <Title level={5}>{record.userId.UserName}</Title>;
+      },
+      width: "10%",
     },
 
     {
@@ -51,26 +93,18 @@ const List = () => {
       dataIndex: "startingDate",
       key: "startingDate",
       render: (val) => {
-        return (
-          <div className="avatar-info">
-            <Title level={5}>{val}</Title>
-          </div>
-        );
+        return <Title level={5}>{moment(val).format("YYYY-MM-DD")}</Title>;
       },
-      width: "12%",
+      width: "10%",
     },
     {
       title: "endingDate",
-      dataIndex: "date fin",
+      dataIndex: "endingDate",
       key: "endingDate",
       render: (val) => {
-        return (
-          <div className="avatar-info">
-            <Title level={5}>{val}</Title>
-          </div>
-        );
+        return <Title level={5}>{moment(val).format("YYYY-MM-DD")}</Title>;
       },
-      width: "12%",
+      width: "10%",
     },
     {
       title: "type_vacation",
@@ -83,7 +117,7 @@ const List = () => {
           </div>
         );
       },
-      width: "12%",
+      width: "10%",
     },
     {
       title: "days",
@@ -95,7 +129,7 @@ const List = () => {
           </div>
         );
       },
-      width: "12%",
+      width: "10%",
     },
 
     {
@@ -109,123 +143,155 @@ const List = () => {
         );
       },
 
-      width: "12%",
+      width: "10%",
     },
     {
-      title: "Reponse ",
-      render: (row) => {
-        return (
-          <Radio.Group>
-            <Radio value={1}>acceptez</Radio>
-            <Radio value={2}>refuser</Radio>
-          </Radio.Group>
-        );
-      },
-    },
-    {
-      title: "Action ",
-      render: (row) => {
+      dataIndex: "action",
+      title: "Action",
+      render: (val, record) => {
         return (
           <Space size="middle" direction="horizontal">
             <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={(e) => {
-                // handleUpdate(row._id);
+              type="dashed"
+              onClick={() => {
+                handleUpdate("Accepted", record._id);
               }}
             >
-              reponse
+              acceptez
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                handleUpdate("Refused", record._id);
+              }}
+            >
+              refuser
             </Button>
           </Space>
         );
       },
+      width: "10%",
     },
   ];
   const config = {
     headers: {
       "content-type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
+      authorization: JSON.parse(localStorage.getItem("token")),
     },
   };
-  const handleUpdate = async () => {
+  const handleUpdate = async (status, id) => {
     const data = {
-      newStatus: selected,
+      newStatus: status,
     };
-    await axios.put(`http://localhost:3011/api/UpdateEtatAdmin`, config, data);
+    await axios
+      .put(`http://localhost:3017/api/UpdateEtatAdmin/` + id, data)
+      .then((res) => {
+        setreload(true);
+        handleSearch();
+      })
+      .catch();
   };
-  let year = new Date().getFullYear();
 
   const handleSearch = async () => {
-    let resultat = await axios.get(
-      `http://localhost:3011/api/listVacation`,
-      config
-    );
-    resultat = resultat.json();
-    if (resultat) {
-      setData(resultat.vacations);
-      console.log("lll", resultat);
-    }
+    await axios
+      .get(`http://localhost:3017/api/listVacation`, config)
+      .then((resultat) => {
+        if (resultat) {
+          setData(resultat.data.vacations);
+        }
+      });
   };
-  console.log("fff", Data);
+  const [drawer, setdrawer] = useState(false);
+
+  const onclosedrawer = () => {
+    setdrawer(false);
+  };
+  const showdrawer = () => {
+    setdrawer(true);
+  };
   useEffect(() => {
     handleSearch();
-  });
+  }, [reload]);
 
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setSelected(event.target.value);
-  };
+  function handleonfinish(values) {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
+      },
+    };
+
+    axios
+      .post(
+        "http://localhost:3017/api/totaleVacation",
+        {
+          role: values.role,
+          totale: values.maxday,
+          type_vacation: values.type,
+        },
+        config
+      )
+      .then((response) => {
+        notification.success({ message: "Settings done" });
+        onclosedrawer();
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
-    <div>
-      <Row style={{ width: "100%", border: "10px " }}>
-        <Col span={24}>
-          <Table
-            columns={columns}
-            dataSource={Data}
-            pagination={{ responsive: true }}
-          />
-        </Col>
-      </Row>
-      <div
-        className="form-group"
-        style={{
-          height: "50px",
-          color: "black",
-          backgroundColor: "#F0FFFF",
-          width: "350px",
-        }}
+    <>
+      <Card
+        type="inner"
+        size="small"
+        title="List des congés"
+        extra={
+          <Button icon={<SettingOutlined />} onClick={showdrawer}>
+            Parameters Congé
+          </Button>
+        }
       >
-        {/* {Data.maxDays},{Data.maxDaysMalade} */}
-        <br /> <br />
-        <h4 className="form-control">max congé de l'anneé :{year}</h4>
-        <br />
-        <input className="form-control" type="number" /> <br />
-        <select className="form-control">
-          <option value="" disabled>
-            type congé
-          </option>
-          <option value="normal">normal</option>
-          <option value="maladie">maladie</option>
-        </select>
-        <br />
-        <select
-          className="form-control"
-          value={selected}
-          onChange={handleChange}
-        >
-          <option value="" disabled>
-            role
-          </option>
-          <option value="analysta">analyse</option>
-          <option value="makiting">markiting</option>
-        </select>
-        <br /> <br />
-        <button class="btn btn-primary" style={{ width: "100%" }}>
-          envoyer
-        </button>
-      </div>
-    </div>
+        <Table columns={columns} dataSource={Data} />
+      </Card>
+      <Drawer
+        className="settings-drawer"
+        mask={true}
+        width={400}
+        closeIcon={null}
+        closable
+        onClose={onclosedrawer}
+        placement="right"
+        visible={drawer}
+      >
+        <Form form={form} onFinish={handleonfinish} layout="vertical">
+          <Card type="inner" size="small" title=" Parameters de congé">
+            <Form.Item label="max congé de l'anneé (jour)" name="maxday">
+              <InputNumber style={{ width: "100%" }} />
+            </Form.Item>
+            <Form.Item label="type" name="type">
+              <Select style={{ width: "100%" }}>
+                <Select.Option value="maladie">maladie</Select.Option>
+                <Select.Option value="normale">Normal</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item label="role" name="role">
+              <Select style={{ width: "100%" }}>
+                <Select.Option value="analysta">analyse</Select.Option>
+                <Select.Option value="makiting">markiting</Select.Option>
+              </Select>
+            </Form.Item>
+            <Row>
+              <Button
+                type="primary"
+                style={{ width: "100%" }}
+                htmlType="submit"
+              >
+                envoyer
+              </Button>
+            </Row>
+          </Card>
+        </Form>
+      </Drawer>
+    </>
   );
 };
 export default List;

@@ -2,6 +2,11 @@ import React, { useRef } from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./file.css";
+import { isAuthenticated } from "../helpers/auth";
+import { useHistory } from "react-router-dom";
+import { Alert, Button, Card, Row, Space, Typography, Upload } from "antd";
+import Title from "antd/lib/skeleton/Title";
+import { UploadOutlined } from "@ant-design/icons";
 
 function CountFile() {
   let [state, setState] = useState({
@@ -9,18 +14,27 @@ function CountFile() {
     countFileVCF: 1,
   });
   let [reponsErr, SetreponsErr] = useState("");
-
+  const hist = useHistory();
   let chromfiles = [];
+  let [chromfilesstate, Setchromfilesstate] = useState([]);
+
   function onChange(event) {
     event.preventDefault();
     for (const file of event.target.files) {
       chromfiles.push(file);
     }
+    Setchromfilesstate(chromfiles);
   }
+  const ref = useRef();
+  const reset = () => {
+    Setchromfilesstate([]);
+    ref.current.value = null;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     let formData = new FormData();
-    for (const file of chromfiles) {
+    for (const file of chromfilesstate) {
       formData.append("file", file);
     }
     // console.log("chromfiles", formData.get("files" + 0));
@@ -28,114 +42,92 @@ function CountFile() {
     const config = {
       headers: {
         "content-type": "multipart/form-data",
+        authorization: JSON.parse(localStorage.getItem("token")),
       },
     };
     axios
-      .post("http://localhost:3011/api/analyse", formData, config)
+      .post("http://localhost:3017/api/analyse", formData, config)
       .then((res) => {
         console.log(res);
         alert(res.data.message);
       })
       .catch((err) => alert(err));
   };
-  const ref = useRef();
-  const reset = () => {
-    ref.current.value = null;
-  };
 
-  axios.get("http://localhost:3011/api/getCount").then((reponse) => {
-    console.log("hhh", reponse);
-    console.log("ttt", reponse.data);
-    if (reponse) {
-      setState({
-        ...state, //parcours state feha 2 objet w l9it feha 2 variable w 5thithom w override
-        countfileCSV: reponse.data.UserfileCSV,
-        countFileVCF: reponse.data.UserfileVCF,
-      });
-    } else {
-      SetreponsErr(reponse.err.error);
-      alert("Error: ", { reponsErr });
-    }
-  });
+  useEffect(() => {
+    axios.get("http://localhost:3017/api/getCount").then((reponse) => {
+      console.log("hhh", reponse);
+      console.log("ttt", reponse.data);
+      if (reponse) {
+        setState({
+          ...state, //parcours state feha 2 objet w l9it feha 2 variable w 5thithom w override
+          countfileCSV: reponse.data.UserfileCSV,
+          countFileVCF: reponse.data.UserfileVCF,
+        });
+      } else {
+        SetreponsErr(reponse.err.error);
+        alert("Error: ", { reponsErr });
+      }
+    });
+  }, []);
 
   return (
-    <>
-      <div className="card" style={{ backgroundColor: "#F5F5F5" }}>
-        <div className="ee">
-          <div>
-            {" "}
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label>Upload Your File User </label>
-                <br />
-                <input
-                  ref={ref}
-                  style={{
-                    width: " 100%",
-                    border: "3px",
-                    fontSize: "25px",
-                    outline: "none",
-                  }}
-                  type="file"
-                  onChange={onChange}
-                  accept=".vcf, .csv"
-                  multiple
-                  required
-                />
-              </div>
-
-              <div>
-                {" "}
-                <input
-                  id="envoyer"
-                  type="submit"
-                  className="btn btn-primary btn-style mt-4"
-                />{" "}
-                <br />
-                <button
-                  onClick={reset}
-                  className="btn btn-primary btn-style mt-4"
-                >
-                  reset
-                </button>
-              </div>
-            </form>
+    <Card
+      style={{ textAlign: "center" }}
+      title={<Typography.Title level={2}>Upload a file</Typography.Title>}
+      type="inner"
+    >
+      <Card className="wrapper">
+        <Row justify="center">
+          <div class="file-upload">
+            <input
+              type="file"
+              multiple
+              required
+              accept=".vcf, .csv"
+              ref={ref}
+              onChange={onChange}
+            />
+            <i class="fa fa-arrow-up"></i>
           </div>
-          <br />
-          <div>
-            <div>
-              <img
-                src="https://png.pngtree.com/png-vector/20190412/ourlarge/pngtree-vcf-file-document-icon-png-image_927937.jpg"
-                alt=""
-                style={{ width: "65px", right: "90px", marginLeft: "120px" }}
-              ></img>
-              &nbsp;&nbsp;
-              <img
-                src="https://png.pngtree.com/png-clipart/20190705/original/pngtree-csv-file-document-icon-png-image_4187767.jpg"
-                alt=""
-                style={{ width: "65px", right: "90px", marginLeft: "10px" }}
-              ></img>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
+        </Row>
         <br />
-        <p
-          className="p-3 mb-2 bg-success text-white"
-          style={{ fontFamily: "Times New Roman", fontSize: "17px" }}
-        >
-          nombre de fichier stockée dans le serveur
-          <br />
-          Csv &nbsp;: &nbsp;{state.countfileCSV} &nbsp; &nbsp; Vcf &nbsp;:
-          &nbsp;
-          {state.countFileVCF}
-        </p>
+        {chromfilesstate.map((val) => (
+          <Row justify="center">
+            <Typography.Text strong>{val.name}</Typography.Text>
+          </Row>
+        ))}
         <br />
 
-        <p style={{ color: "red" }}>{reponsErr}</p>
-      </div>
-    </>
+        <Row justify="center">
+          <Space size="middle">
+            <Button type="default" onClick={reset}>
+              reset
+            </Button>
+            <Button type="primary" onClick={handleSubmit}>
+              submit
+            </Button>
+          </Space>
+        </Row>
+      </Card>
+      <br />
+      <Card>
+        <Alert
+          message=" VCF "
+          description={
+            "nombre de fichier stockée dans le serveur  : " + state.countFileVCF
+          }
+          type="success"
+        />
+        <Alert
+          message="CSV"
+          description={
+            "nombre de fichier stockée dans le serveur  : " + state.countfileCSV
+          }
+          type="info"
+        />
+      </Card>
+    </Card>
   );
 }
 export default CountFile;

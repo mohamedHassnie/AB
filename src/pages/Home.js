@@ -17,9 +17,13 @@ import {
 import Echart from "../components/chart/EChart";
 import LineChart from "../components/chart/LineChart";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
+import { isAuthenticated } from "../helpers/auth";
+import { ExperimentFilled, SmileFilled } from "@ant-design/icons";
 
 function Home() {
   const { Title, Text } = Typography;
+  const [data, setdata] = useState({});
 
   const dollor = [
     <svg
@@ -111,29 +115,52 @@ function Home() {
   const count = [
     {
       today: "Today’s Analise",
-      title: "53K",
-      icon: dollor,
+      title: `${data.nbuserA}`,
+      icon: <ExperimentFilled />,
       bnb: "bnb2",
     },
     {
       today: "Today’s Users",
-      title: "3,200",
+      title: `${data.nbuser}`,
       icon: profile,
       bnb: "bnb2",
     },
     {
       today: "New Clients",
-      title: "+1,200",
+      title: `${data.nbPation}`,
       icon: heart,
       bnb: "redtext",
     },
     {
-      today: "New Analise",
-      title: "10k",
+      today: "Total Marketing",
+      title: `${data.nbuserMark}`,
       icon: cart,
       bnb: "bnb2",
     },
   ];
+
+  const hist = useHistory();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      hist.push("/sign-in");
+    }
+
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
+      },
+    };
+    axios
+      .get("http://localhost:3017/api/info", config)
+      .then(function (response) {
+        setdata(response.data.data);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>

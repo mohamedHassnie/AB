@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import emailjs from "@emailjs/browser";
@@ -15,13 +15,14 @@ import {
   notification,
 } from "antd";
 
-import { setAuthentication } from "../helpers/auth";
+import { isAuthenticated, setAuthentication } from "../helpers/auth";
 
 import signinbg from "../assets/images/SGimg.svg";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import GoogleLogin from "react-google-login";
-var localStorage = require("local-storage");
+import { useContext } from "react";
+import { AuthContext } from "../App";
 const SignIn = () => {
   function onChange(checked) {
     console.log(`switch to ${checked}`);
@@ -43,91 +44,99 @@ const SignIn = () => {
       },
     };
 
+    await fetch("http://localhost:3017/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((response) => {
+      response.json().then((response) => {
+        if (response.token) {
+          console.log("testtt", response);
+          setAuthentication(response?.token, response?.user);
+          notification.success({ message: response?.message });
+          hist.push("/dashboard");
+        } else {
+          notification.error({ message: response?.error.message });
+        }
+      });
+    });
+  };
+
+  const resetpassword = async () => {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+        authorization: JSON.parse(localStorage.getItem("token")),
+      },
+    };
+
     await axios
-      .post("http://localhost:3011/api/login", data, config)
-      .then((response) => {
-        console.log("hetha houwa", response);
-        setAuthentication(response.data.token, response.data.user);
-        hist.push("/dashboard");
-        notification.success({ message: response.data.message });
+      .post("http://localhost:3017/api/request/password", { email }, config)
+      .then((data) => {
+        let templateParams = {
+          name: "Mr or Mm",
+          Email: email,
+          message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
+        };
+
+        emailjs
+          .send(
+            "service_pk0af5q",
+            "template_lnq0ocu",
+            templateParams,
+            "user_TjkkGMETOdkygzIZjLVGS"
+          )
+          .then(
+            (result) => {
+              notification.success({ message: "Check you Email" });
+            },
+            (error) => {
+              notification.error({ message: error.text });
+            }
+          );
       })
-      .catch((response) => {
-        notification.error({ message: response.data.message });
+      .catch((error) => {
+        notification.error({ message: "Email Not Found " });
       });
   };
 
-  // const resetpassword = async () => {
-  //   const config = {
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //   };
+  const handleLogin = async (googleData) => {
+    const config = {
+      headers: {
+        "content-type": "application/json",
+      },
+    };
 
-  //   await axios
-  //     .post("http://localhost:3011/api/request/password", { email }, config)
-  //     .then((data) => {
-  //       let templateParams = {
-  //         name: "Mr or Mm",
-  //         Email: email,
-  //         message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
-  //       };
+    console.log("token", googleData.tokenId);
 
-  //       emailjs
-  //         .send(
-  //           "service_pk0af5q",
-  //           "template_lnq0ocu",
-  //           templateParams,
-  //           "user_TjkkGMETOdkygzIZjLVGS"
-  //         )
-  //         .then(
-  //           (result) => {
-  //             notification.success({ message: "Check you Email" });
-  //           },
-  //           (error) => {
-  //             notification.error({ message: error.text });
-  //           }
-  //         );
-  //     })
-  //     .catch((error) => {
-  //       notification.error({ message: "Email Not Found " });
-  //     });
-  // };
-
-  // const handleLogin = async (googleData) => {
-  //   const config = {
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //   };
-
-  //   console.log("token", googleData.tokenId);
-
-  //   await axios
-  //     .post(
-  //       "http://localhost:3011/api/google-login",
-  //       { token: googleData.tokenId },
-  //       config
-  //     )
-  //     .then(async (result) => {
-  //       const data = result.json();
-  //       await axios
-  //         .post(
-  //           "http://localhost:3011/api/loginGoogle",
-  //           { email: data.email },
-  //           config
-  //         )
-  //         .then((result) => {
-  //           localStorage.setItem("user", JSON.stringify(result.data.user));
-  //           localStorage.setItem("token", JSON.stringify(result.data.token));
-  //         })
-  //         .catch(() => {
-  //           notification.error({ message: "check your Email " });
-  //         });
-  //     })
-  //     .catch(() => {
-  //       notification.error({ message: "Error Service Google" });
-  //     });
-  // };
+    await axios
+      .post(
+        "http://localhost:3017/api/google-login",
+        { token: googleData.tokenId },
+        config
+      )
+      .then(async (result) => {
+        const data = result.json();
+        await axios
+          .post(
+            "http://localhost:3017/api/loginGoogle",
+            { email: data.email },
+            config
+          )
+          .then((result) => {
+            localStorage.setItem("user", JSON.stringify(result.data.user));
+            localStorage.setItem("token", JSON.stringify(result.data.token));
+          })
+          .catch(() => {
+            notification.error({ message: "check your Email " });
+          });
+      })
+      .catch(() => {
+        notification.error({ message: "Error Service Google" });
+      });
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -202,33 +211,33 @@ const SignIn = () => {
                     SIGN IN
                   </Button>
                 </Form.Item>
-                {/* <Form.Item>
+
+                <Button
+                  type="default"
+                  htmlType="submit"
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    hist.push("/sign-up");
+                  }}
+                >
+                  SignUp Patient
+                </Button>
+
+                <Form.Item>
                   <a onClick={resetpassword}> Forget password ?</a>
-                </Form.Item> */}
-                {/* <Form.Item>
+                </Form.Item>
+                <Form.Item>
                   <GoogleLogin
                     clientId={
-                      "383609296631-1rqh8hldbf76j1420idr4l0bhhab1lhr.apps.googleusercontent.com"
+                      "913791692427-7op1mas3df4pt1fikad6pli7njalnov2.apps.googleusercontent.com"
                     }
                     buttonText="login with Google"
                     onSuccess={handleLogin}
+                    onFailure={() => {
+                      notification.error({ message: "google failure" });
+                    }}
                     cookiePolicy={"single_host_origin"}
                   ></GoogleLogin>
-                </Form.Item> */}
-                <Form.Item>
-                  <button
-                    type="button"
-                    class="btn btn-success"
-                    style={{
-                      width: "48%",
-                      height: "47px",
-                      position: "center",
-                    }}
-                  >
-                    <Link to="/sign-up" className="text-dark font-bold">
-                      SignUp Patient
-                    </Link>
-                  </button>
                 </Form.Item>
               </Form>
             </Col>

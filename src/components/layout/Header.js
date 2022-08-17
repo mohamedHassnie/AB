@@ -15,10 +15,13 @@ import {
   Switch,
   Menu,
   Space,
+  notification,
 } from "antd";
 
 import { NavLink, Link } from "react-router-dom";
 import styled from "styled-components";
+import { UserOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const ButtonContainer = styled.div`
   .ant-btn-primary {
@@ -43,9 +46,8 @@ const ButtonContainer = styled.div`
 
 const profile = [
   <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
+    width="200"
+    height="200"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     key={0}
@@ -61,37 +63,7 @@ const profile = [
 
 const logout = () => {
   localStorage.clear();
-  window.location.reload();
 };
-const menu = (
-  <Menu>
-    <Menu.Item key="1">
-      <Link to="/profile">view Profile</Link>
-    </Menu.Item>
-
-    <Menu.Item key="2">
-      <Link to="/sign-in">logout</Link>
-    </Menu.Item>
-  </Menu>
-);
-
-const logsetting = [
-  <svg
-    width="30"
-    height="30"
-    viewBox="0 0 20 20"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    key={0}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M11.4892 3.17094C11.1102 1.60969 8.8898 1.60969 8.51078 3.17094C8.26594 4.17949 7.11045 4.65811 6.22416 4.11809C4.85218 3.28212 3.28212 4.85218 4.11809 6.22416C4.65811 7.11045 4.17949 8.26593 3.17094 8.51078C1.60969 8.8898 1.60969 11.1102 3.17094 11.4892C4.17949 11.7341 4.65811 12.8896 4.11809 13.7758C3.28212 15.1478 4.85218 16.7179 6.22417 15.8819C7.11045 15.3419 8.26594 15.8205 8.51078 16.8291C8.8898 18.3903 11.1102 18.3903 11.4892 16.8291C11.7341 15.8205 12.8896 15.3419 13.7758 15.8819C15.1478 16.7179 16.7179 15.1478 15.8819 13.7758C15.3419 12.8896 15.8205 11.7341 16.8291 11.4892C18.3903 11.1102 18.3903 8.8898 16.8291 8.51078C15.8205 8.26593 15.3419 7.11045 15.8819 6.22416C16.7179 4.85218 15.1478 3.28212 13.7758 4.11809C12.8896 4.65811 11.7341 4.17949 11.4892 3.17094ZM10 13C11.6569 13 13 11.6569 13 10C13 8.34315 11.6569 7 10 7C8.34315 7 7 8.34315 7 10C7 11.6569 8.34315 13 10 13Z"
-      fill="#111827"
-    ></path>
-  </svg>,
-];
 
 const toggler = [
   <svg
@@ -135,17 +107,74 @@ function Header({
   const { Title, Text } = Typography;
 
   const [visible, setVisible] = useState(false);
+  const [notifList, setnotifList] = useState([]);
   const [sidenavType, setSidenavType] = useState("transparent");
   const [user, setuser] = useState({});
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setuser(JSON.parse(localStorage.getItem("user")));
-  }, []);
+    if (JSON.parse(localStorage.getItem("user"))) {
+      setuser(JSON.parse(localStorage.getItem("user")));
+
+      const config = {
+        headers: {
+          "content-type": "application/json",
+          authorization: JSON.parse(localStorage.getItem("token")),
+        },
+      };
+
+      console.log("deeeee", JSON.parse(localStorage.getItem("user")).email);
+
+      axios
+        .post(
+          "http://localhost:3017/api/getEntretientByInterv",
+          { email: JSON.parse(localStorage.getItem("user")).email },
+          config
+        )
+        .then((res) => {
+          setnotifList(res.data);
+        })
+        .catch(() => {
+          notification.error({ message: " No Notification Yet " });
+        });
+    }
+  }, [notifList]);
 
   console.log(user, "ici user");
   const showDrawer = () => setVisible(true);
   const hideDrawer = () => setVisible(false);
+
+  const [notif, setnotif] = useState(false);
+
+  const onclosenotif = () => {
+    setnotif(false);
+  };
+  const shownotif = () => {
+    setnotif(true);
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">
+        <Link to="/profile">view Profile</Link>
+      </Menu.Item>
+      <Badge count={notifList.length} size="small">
+        <Menu.Item key="2">
+          <a
+            onClick={() => {
+              shownotif();
+            }}
+          >
+            Notification
+          </a>
+        </Menu.Item>
+      </Badge>
+      <Menu.Item key="3">
+        <Link to="/sign-in" onClick={() => logout()}>
+          logout
+        </Link>
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <>
@@ -180,21 +209,43 @@ function Header({
             >
               {toggler}
             </Button>
-            <Dropdown overlay={menu} trigger={["click"]}>
-              <a
-                href="#pablo"
-                className="ant-dropdown-link"
-                onClick={(e) => e.preventDefault()}
+            <Text type="secondary" strong>
+              <span>{user?.UserName}</span>
+            </Text>
+            <Badge count={notifList.length}>
+              <Dropdown
+                overlay={menu}
+                trigger={["hover"]}
+                style={{ cursor: "pointer" }}
               >
-                {profile}
-                <span>{user?.UserName}</span>
-              </a>
-            </Dropdown>
-            <Button type="link" onClick={showDrawer}>
-              {logsetting}
-            </Button>
-            <Button type="link">{setting}</Button>
+                <Avatar size="large" style={{ cursor: "pointer" }}>
+                  <UserOutlined />
+                </Avatar>
+              </Dropdown>
+            </Badge>
           </Space>
+          <Drawer
+            title="Notification"
+            placement="right"
+            onClose={onclosenotif}
+            visible={notif}
+          >
+            <List
+              itemLayout="horizontal"
+              dataSource={notifList}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+                    title={<a href="https://ant.design">{item.status}</a>}
+                    description={
+                      "Today You have an Interview with " + item.interview
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          </Drawer>
           <Drawer
             className="settings-drawer"
             mask={true}

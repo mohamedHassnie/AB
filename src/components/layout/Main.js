@@ -26,6 +26,7 @@ function Main({ children }) {
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
+      style={{zIndex:4}}
     >
       <Drawer
         title={false}
