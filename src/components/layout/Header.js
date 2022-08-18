@@ -115,29 +115,31 @@ function Header({
     if (JSON.parse(localStorage.getItem("user"))) {
       setuser(JSON.parse(localStorage.getItem("user")));
 
-      const config = {
-        headers: {
-          "content-type": "application/json",
-          authorization: JSON.parse(localStorage.getItem("token")),
-        },
-      };
+      setInterval(() => {
+        const config = {
+          headers: {
+            "content-type": "application/json",
+            authorization: JSON.parse(localStorage.getItem("token")),
+          },
+        };
 
-      console.log("deeeee", JSON.parse(localStorage.getItem("user")).email);
+        console.log("deeeee", JSON.parse(localStorage.getItem("user")));
 
-      axios
-        .post(
-          "http://localhost:3017/api/getEntretientByInterv",
-          { email: JSON.parse(localStorage.getItem("user")).email },
-          config
-        )
-        .then((res) => {
-          setnotifList(res.data);
-        })
-        .catch(() => {
-          notification.error({ message: " No Notification Yet " });
-        });
+        axios
+          .post(
+            "http://localhost:3017/api/getEntretientByInterv",
+            { email: JSON.parse(localStorage.getItem("user")).email },
+            config
+          )
+          .then((res) => {
+            setnotifList(res.data);
+          })
+          .catch(() => {
+            notification.error({ message: " No Notification Yet " });
+          });
+      }, 5000);
     }
-  }, [notifList]);
+  }, []);
 
   console.log(user, "ici user");
   const showDrawer = () => setVisible(true);

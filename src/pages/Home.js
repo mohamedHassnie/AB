@@ -115,25 +115,25 @@ function Home() {
   const count = [
     {
       today: "Today’s Analise",
-      title: `${data.nbuserA}`,
+      title: `${data?.nbuserA ?? 0}`,
       icon: <ExperimentFilled />,
       bnb: "bnb2",
     },
     {
       today: "Today’s Users",
-      title: `${data.nbuser}`,
+      title: `${data?.nbuser ?? 0}`,
       icon: profile,
       bnb: "bnb2",
     },
     {
       today: "New Clients",
-      title: `${data.nbPation}`,
+      title: `${data?.nbPation ?? 0}`,
       icon: heart,
       bnb: "redtext",
     },
     {
       today: "Total Marketing",
-      title: `${data.nbuserMark}`,
+      title: `${data?.nbuserMark ?? 0}`,
       icon: cart,
       bnb: "bnb2",
     },
@@ -155,7 +155,7 @@ function Home() {
     axios
       .get("http://localhost:3017/api/info", config)
       .then(function (response) {
-        setdata(response.data.data);
+        setdata(response.data?.data);
       })
       .catch(function (err) {
         console.log(err);

@@ -14,7 +14,10 @@ import {
   Row,
   Col,
 } from "antd";
-
+import GoogleMapReact from "google-map-react";
+import { Footer } from "antd/lib/layout/layout";
+import { Image } from "antd";
+import logo from "../assets/images/ooo.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
@@ -52,7 +55,13 @@ const SignUp = () => {
         });
     }
   };
-
+  const defaultProps = {
+    center: {
+      lat: 10.99835602,
+      lng: 77.01502627,
+    },
+    zoom: 11,
+  };
   const onFinishFailed = (errorInfo) => {
     notification.error({ message: "check your data " });
   };
@@ -60,6 +69,8 @@ const SignUp = () => {
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
   ];
+  const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
   return (
     <>
       <div className="layout-default ant-layout layout-sign-up">
@@ -279,6 +290,73 @@ const SignUp = () => {
           </Card>
         </Content>
       </div>
+      <Footer
+        style={{
+          backgroundColor: "rgba(230, 230, 230, 1) ",
+          paddingTop: "50px",
+          zIndex: 4,
+          position: "relative",
+        }}
+      >
+        <Row>
+          <Col span={12}>
+            <Row>
+              <Image src={logo} width="150px" />
+            </Row>
+            <br />
+            <Row gutter={64}>
+              <Col span={12}>
+                <Row>
+                  {" "}
+                  <Typography.Text underline italic>
+                    Contact us with Email:
+                  </Typography.Text>{" "}
+                </Row>
+
+                <Row>
+                  <Typography.Text strong>
+                    {" "}
+                    Abiomix.Abiomix@Abiomix.com{" "}
+                  </Typography.Text>
+                </Row>
+                <Row>
+                  <Typography.Text strong>
+                    {" "}
+                    Abiomix.Abiomix@Abiomix.com{" "}
+                  </Typography.Text>
+                </Row>
+              </Col>
+              <Col span={12}>
+                <Row>
+                  <Typography.Text underline italic>
+                    Contact us with Phone:
+                  </Typography.Text>{" "}
+                </Row>
+                <Row>
+                  <Typography.Text strong>+216 58 913 468</Typography.Text>
+                </Row>
+                <Row>
+                  {" "}
+                  <Typography.Text strong>+216 58 913 468</Typography.Text>
+                </Row>
+              </Col>
+            </Row>
+          </Col>
+          <Col style={{ height: "30vh", width: "60%" }} span={12}>
+            <GoogleMapReact
+              bootstrapURLKeys={{ key: "" }}
+              defaultCenter={defaultProps.center}
+              defaultZoom={defaultProps.zoom}
+            >
+              <AnyReactComponent
+                lat={59.955413}
+                lng={30.337844}
+                text="My Marker"
+              />
+            </GoogleMapReact>
+          </Col>
+        </Row>
+      </Footer>
     </>
   );
 };

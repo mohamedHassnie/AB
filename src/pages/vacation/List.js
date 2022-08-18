@@ -131,6 +131,18 @@ const List = () => {
       },
       width: "10%",
     },
+    {
+      title: "Message",
+      dataIndex: "message",
+      render: (val, record) => {
+        return (
+          <div className="author-info">
+            <Title level={5}>{val}</Title>
+          </div>
+        );
+      },
+      width: "10%",
+    },
 
     {
       title: "status",

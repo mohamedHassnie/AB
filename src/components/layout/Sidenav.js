@@ -170,26 +170,41 @@ function Sidenav({ color }) {
         <img src={logo} alt="" style={{ width: "200px", height: "70px" }} />
       </div>
       <hr /> <br /> <br />
-      <Menu theme="dark" mode="inline" style={{zIndex:1}}>
+      <Menu theme="dark" mode="inline" style={{ zIndex: 1 }}>
         {/* <img src={logo} alt="" /> */}
         <br />
-
-        <Fragment style={{zIndex:1}}>
-          <Menu.Item key="1">
-            <NavLink to="/dashboard">
-              <span
-                className="icon"
-                style={{
-                  background: page === "dashboard" ? color : "",
-                }}
-              >
-            <PieChartFilled />
-              </span>
-              <span className="label">Dashboard</span>
-            </NavLink>
-          </Menu.Item>
+        <Fragment style={{ zIndex: 1 }}>
+          {JSON.parse(localStorage.getItem("user")).role === "analysta" ? (
+            <Menu.Item key="1">
+              <NavLink to="/analyse">
+                <span
+                  className="icon"
+                  style={{
+                    background: page === "dashboard" ? color : "",
+                  }}
+                >
+                  <PieChartFilled />
+                </span>
+                <span className="label">Dashboard</span>
+              </NavLink>
+            </Menu.Item>
+          ) : (
+            <Menu.Item key="1">
+              <NavLink to="/dashboard">
+                <span
+                  className="icon"
+                  style={{
+                    background: page === "dashboard" ? color : "",
+                  }}
+                >
+                  <PieChartFilled />
+                </span>
+                <span className="label">Dashboard</span>
+              </NavLink>
+            </Menu.Item>
+          )}
         </Fragment>
-        <Fragment style={{zIndex:1}}>
+        <Fragment style={{ zIndex: 1 }}>
           <Menu.Item key="2">
             <NavLink to="/tables">
               <span
@@ -204,7 +219,7 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment style={{zIndex:1}}>
+        <Fragment style={{ zIndex: 1 }}>
           <Menu.Item key="3">
             <NavLink to="/Tablepatient">
               <span
@@ -219,7 +234,7 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment style={{zIndex:1}}>
+        <Fragment style={{ zIndex: 1 }}>
           <Menu.Item key="4">
             <NavLink to="/add_file">
               <span
@@ -234,7 +249,7 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment style={{zIndex:1}}>
+        <Fragment style={{ zIndex: 1 }}>
           <Menu.Item key="5">
             <NavLink to="/vacation">
               <span
@@ -249,36 +264,40 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment>
-        <Fragment style={{zIndex:1}}>
-          <Menu.Item key="6">
-            <NavLink to="/listVacation">
-              <span
-                className="icon"
-                style={{
-                  background: page === "listVacation" ? color : "",
-                }}
-              >
-                <ProfileFilled />
-              </span>
-              <span className="label"> list_Vacation</span>
-            </NavLink>
-          </Menu.Item>
-        </Fragment>
-        <Fragment style={{zIndex:1}}>
-          <Menu.Item key="8">
-            <NavLink to="/Interview">
-              <span
-                className="icon"
-                style={{
-                  background: page === "Interview" ? color : "",
-                }}
-              >
-                <ProfileFilled />
-              </span>
-              <span className="label"> Interview</span>
-            </NavLink>
-          </Menu.Item>
-        </Fragment>
+        {JSON.parse(localStorage.getItem("user")).role === "admin" && (
+          <Fragment style={{ zIndex: 1 }}>
+            <Menu.Item key="6">
+              <NavLink to="/listVacation">
+                <span
+                  className="icon"
+                  style={{
+                    background: page === "listVacation" ? color : "",
+                  }}
+                >
+                  <ProfileFilled />
+                </span>
+                <span className="label"> list_Vacation</span>
+              </NavLink>
+            </Menu.Item>
+          </Fragment>
+        )}
+        {JSON.parse(localStorage.getItem("user")).role === "admin" && (
+          <Fragment style={{ zIndex: 1 }}>
+            <Menu.Item key="8">
+              <NavLink to="/Interview">
+                <span
+                  className="icon"
+                  style={{
+                    background: page === "Interview" ? color : "",
+                  }}
+                >
+                  <ProfileFilled />
+                </span>
+                <span className="label"> Interview</span>
+              </NavLink>
+            </Menu.Item>
+          </Fragment>
+        )}
         {/* <Fragment style={{zIndex:1}}>
           <Menu.Item key="7">
             <NavLink to="/time">
@@ -294,7 +313,7 @@ function Sidenav({ color }) {
             </NavLink>
           </Menu.Item>
         </Fragment> */}
-        <Fragment style={{zIndex:1}}>
+        <Fragment style={{ zIndex: 1 }}>
           <Menu.Item key="8">
             <NavLink to="/mail">
               <span

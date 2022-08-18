@@ -36,7 +36,7 @@ const Mail = () => {
     };
 
     axios
-      .post("http://localhost:3017/api/getUserByRole", { role: "ALL" }, config)
+      .get("http://localhost:3017/api/getAllMails", config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         let children = [];
