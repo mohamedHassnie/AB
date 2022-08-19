@@ -157,7 +157,7 @@ function Interview() {
     }
 
     axios
-      .get("http://localhost:3017/api/getEntretient", config)
+      .get("http://10.10.50.24:3017/api/getEntretient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -168,7 +168,7 @@ function Interview() {
 
   const handleDelete = async (id) => {
     await axios
-      .get("http://localhost:3017/api/deleteEntretient/" + id, config)
+      .get("http://10.10.50.24:3017/api/deleteEntretient/" + id, config)
       .then(function (response) {
         handrefetech();
       })

@@ -44,7 +44,7 @@ const SignIn = () => {
       },
     };
 
-    await fetch("http://localhost:3017/api/login", {
+    await fetch("http://10.10.50.24:3017/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,12 +73,12 @@ const SignIn = () => {
     };
 
     await axios
-      .post("http://localhost:3017/api/request/password", { email }, config)
+      .post("http://10.10.50.24:3017/api/request/password", { email }, config)
       .then((data) => {
         let templateParams = {
           name: "Mr or Mm",
           Email: email,
-          message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
+          message: `http://10.10.50.24:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
         };
 
         emailjs
@@ -113,7 +113,7 @@ const SignIn = () => {
 
     await axios
       .post(
-        "http://localhost:3017/api/google-login",
+        "http://10.10.50.24:3017/api/google-login",
         { token: googleData.tokenId },
         config
       )
@@ -121,7 +121,7 @@ const SignIn = () => {
         const data = result.json();
         await axios
           .post(
-            "http://localhost:3017/api/loginGoogle",
+            "http://10.10.50.24:3017/api/loginGoogle",
             { email: data.email },
             config
           )

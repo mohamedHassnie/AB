@@ -167,7 +167,7 @@ function Tablepatient() {
     }
 
     axios
-      .get("http://localhost:3017/api/getPatient", config)
+      .get("http://10.10.50.24:3017/api/getPatient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -178,7 +178,7 @@ function Tablepatient() {
 
   const handleDelete = async (id) => {
     await axios
-      .delete(`http://localhost:3017/api/deletePatient/${id}`, config)
+      .delete(`http://10.10.50.24:3017/api/deletePatient/${id}`, config)
       .then(function (response) {
         handrefetech();
       })
@@ -190,7 +190,7 @@ function Tablepatient() {
   const handleSearch = async () => {
     setLoading(true);
     let resultat = await fetch(
-      `http://localhost:3017/api/searchPatient/${key ? key : "all"}`,
+      `http://10.10.50.24:3017/api/searchPatient/${key ? key : "all"}`,
       config
     );
 

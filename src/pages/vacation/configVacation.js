@@ -26,7 +26,7 @@
 //   post(refs) {
 //     var self = this;
 //     axios
-//       .post("http://localhost:4000/login/admin", {
+//       .post("http://10.10.50.24:4000/login/admin", {
 //         email: refs.username.value,
 //         password: refs.password.value,
 //       })

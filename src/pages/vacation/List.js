@@ -196,7 +196,7 @@ const List = () => {
       newStatus: status,
     };
     await axios
-      .put(`http://localhost:3017/api/UpdateEtatAdmin/` + id, data)
+      .put(`http://10.10.50.24:3017/api/UpdateEtatAdmin/` + id, data)
       .then((res) => {
         setreload(true);
         handleSearch();
@@ -206,7 +206,7 @@ const List = () => {
 
   const handleSearch = async () => {
     await axios
-      .get(`http://localhost:3017/api/listVacation`, config)
+      .get(`http://10.10.50.24:3017/api/listVacation`, config)
       .then((resultat) => {
         if (resultat) {
           setData(resultat.data.vacations);
@@ -235,7 +235,7 @@ const List = () => {
 
     axios
       .post(
-        "http://localhost:3017/api/totaleVacation",
+        "http://10.10.50.24:3017/api/totaleVacation",
         {
           role: values.role,
           totale: values.maxday,

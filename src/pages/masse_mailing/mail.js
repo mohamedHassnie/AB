@@ -36,7 +36,7 @@ const Mail = () => {
     };
 
     axios
-      .get("http://localhost:3017/api/getAllMails", config)
+      .get("http://10.10.50.24:3017/api/getAllMails", config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         let children = [];

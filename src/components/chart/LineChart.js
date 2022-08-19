@@ -21,7 +21,7 @@ function LineChart() {
     };
 
     await axios
-      .get("http://localhost:3017/api/analysta", config)
+      .get("http://10.10.50.24:3017/api/analysta", config)
       .then((response) => {
         setdatAl(Object.values(response.data.months[0]));
       })
@@ -30,7 +30,7 @@ function LineChart() {
       });
 
     await axios
-      .get("http://localhost:3017/api/markiting", config)
+      .get("http://10.10.50.24:3017/api/markiting", config)
       .then((response) => {
         setdataMar(Object.values(response.data.months[0]));
       })

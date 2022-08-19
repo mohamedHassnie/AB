@@ -46,7 +46,7 @@ function CountFile() {
       },
     };
     axios
-      .post("http://localhost:3017/api/analyse", formData, config)
+      .post("http://10.10.50.24:3017/api/analyse", formData, config)
       .then((res) => {
         console.log(res);
         alert(res.data.message);
@@ -55,7 +55,7 @@ function CountFile() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3017/api/getCount").then((reponse) => {
+    axios.get("http://10.10.50.24:3017/api/getCount").then((reponse) => {
       console.log("hhh", reponse);
       console.log("ttt", reponse.data);
       if (reponse) {

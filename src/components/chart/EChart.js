@@ -19,7 +19,7 @@ function EChart() {
     };
 
     await axios
-      .get("http://localhost:3017/api/activeUser", data, config)
+      .get("http://10.10.50.24:3017/api/activeUser", data, config)
       .then((response) => {
         setdata(Object.values(response.data.months[0]));
       })

@@ -6,6 +6,6 @@ export default function Activation_Code() {
   const hist = useHistory();
 
   const { emailToken } = useParams;
-  axios.post(`http://localhost:3017/api/verify-email/${emailToken}`);
+  axios.post(`http://10.10.50.24:3017/api/verify-email/${emailToken}`);
   return <div>Activation_Code</div>;
 }

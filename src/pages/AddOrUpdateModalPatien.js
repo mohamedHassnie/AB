@@ -53,7 +53,7 @@ const AddOrUpdateModalPatient = (props) => {
 
     await axios
       .put(
-        "http://localhost:3017/api/updatepatient/" + values.id,
+        "http://10.10.50.24:3017/api/updatepatient/" + values.id,
         values,
         config
       )
