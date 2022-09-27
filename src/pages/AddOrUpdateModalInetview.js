@@ -52,7 +52,11 @@ const AddOrUpdateModalInetview = (props) => {
     };
 
     axios
-      .post("http://localhost:3019/api/getUserByRole", { role: "ALL" }, config)
+      .post(
+        "http://10.10.50.24:3019/api/getUserByRole",
+        { role: "ALL" },
+        config
+      )
       .then(function (response) {
         let children = [];
         response.data.forEach((element, i) => {
@@ -91,7 +95,7 @@ const AddOrUpdateModalInetview = (props) => {
     if (props.type === "EDIT") {
       await axios
         .put(
-          "http://localhost:3019/api/updateEntretient/" + values.id,
+          "http://10.10.50.24:3019/api/updateEntretient/" + values.id,
           val,
           config
         )
@@ -107,7 +111,7 @@ const AddOrUpdateModalInetview = (props) => {
     } else {
       console.log("testttttttttt ", values);
       await axios
-        .post("http://localhost:3019/api/addEntretient", values, config)
+        .post("http://10.10.50.24:3019/api/addEntretient", values, config)
         .then(function (response) {
           notification.success({ message: " Done  " });
           props.refetech();

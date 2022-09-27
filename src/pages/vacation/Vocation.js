@@ -103,7 +103,7 @@ export default function Vocation() {
 
     axios
       .post(
-        "http://localhost:3019/api/vacation",
+        "http://10.10.50.24:3019/api/vacation",
         {
           startingDate: values.startdate,
           endingDate: values.enddate,
@@ -123,7 +123,7 @@ export default function Vocation() {
   };
   useEffect(() => {
     axios
-      .get("http://localhost:3019/api/historiqueVaccation", config)
+      .get("http://10.10.50.24:3019/api/historiqueVaccation", config)
       .then((reponse) => {
         if (reponse) {
           sethist(reponse.data.data);

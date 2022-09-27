@@ -44,7 +44,7 @@ const AddOrUpdateModal = (props) => {
       const values = { ...val, role: form.getFieldValue("role") };
 
       await axios
-        .post("http://localhost:3019/api/addUser", values, config)
+        .post("http://10.10.50.24:3019/api/addUser", values, config)
         .then((response) => {
           notification.success({ message: "User added" });
 
@@ -65,7 +65,7 @@ const AddOrUpdateModal = (props) => {
 
       await axios
         .put(
-          "http://localhost:3019/api/UpdateUser/" + values._id,
+          "http://10.10.50.24:3019/api/UpdateUser/" + values._id,
           values,
           config
         )

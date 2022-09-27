@@ -36,7 +36,7 @@ function RestPassword() {
     };
     await axios
       .put(
-        "http://localhost:3019/api/updatepass/" + id,
+        "http://10.10.50.24:3019/api/updatepass/" + id,
         { password: newpassword, token },
         config
       )

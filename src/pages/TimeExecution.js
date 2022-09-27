@@ -14,7 +14,7 @@ const CountFile = () => {
     if (!isAuthenticated()) {
       hist.push("");
     }
-    axios.get("http://localhost:3019/api/getCount").then((reponse) => {
+    axios.get("http://10.10.50.24:3019/api/getCount").then((reponse) => {
       // console.log("hhh", reponse);
       // console.log("ttt", reponse.data);
       if (reponse) {

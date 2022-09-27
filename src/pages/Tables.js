@@ -206,7 +206,7 @@ function Tables() {
     };
 
     axios
-      .post("http://localhost:3019/api/getUserByRole", { role: role }, config)
+      .post("http://10.10.50.24:3019/api/getUserByRole", { role: role }, config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         setdata(response.data);
@@ -235,11 +235,11 @@ function Tables() {
       if (result.isConfirmed) {
         notification.success({ message: "deleted" });
         axios
-          .delete("http://localhost:3019/api/deleteUser/" + _id, config)
+          .delete("http://10.10.50.24:3019/api/deleteUser/" + _id, config)
           .then(function (response) {
             axios
               .post(
-                "http://localhost:3019/api/getUserByRole",
+                "http://10.10.50.24:3019/api/getUserByRole",
                 { role: role },
                 config
               )

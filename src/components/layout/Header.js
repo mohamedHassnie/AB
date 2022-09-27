@@ -127,7 +127,7 @@ function Header({
 
         axios
           .post(
-            "http://localhost:3019/api/getEntretientByInterv",
+            "http://10.10.50.24:3019/api/getEntretientByInterv",
             { email: JSON.parse(localStorage.getItem("user")).email },
             config
           )

@@ -158,7 +158,7 @@ function Interview() {
     }
 
     axios
-      .get("http://localhost:3019/api/getEntretient", config)
+      .get("http://10.10.50.24:3019/api/getEntretient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -169,7 +169,7 @@ function Interview() {
 
   const handleDelete = async (id) => {
     await axios
-      .get("http://localhost:3019/api/deleteEntretient/" + id, config)
+      .get("http://10.10.50.24:3019/api/deleteEntretient/" + id, config)
       .then(function (response) {
         handrefetech();
       })
@@ -179,7 +179,7 @@ function Interview() {
   };
   const handleUpdate = async (id) => {
     await axios
-      .get("http://localhost:3019/api/updateEntretient/" + id, config)
+      .get("http://10.10.50.24:3019/api/updateEntretient/" + id, config)
       .then(function (response) {
         handrefetech();
       })

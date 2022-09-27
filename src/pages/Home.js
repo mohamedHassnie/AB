@@ -116,7 +116,7 @@ function Home() {
       },
     };
     axios
-      .get("http://localhost:3019/api/info", config)
+      .get("http://10.10.50.24:3019/api/info", config)
       .then(function (response) {
         setdata(response.data?.data);
       })
