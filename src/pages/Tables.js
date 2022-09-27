@@ -195,7 +195,7 @@ function Tables() {
   };
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("");
     }
 
     const config = {
@@ -206,7 +206,7 @@ function Tables() {
     };
 
     axios
-      .post("http://10.10.50.24:3017/api/getUserByRole", { role: role }, config)
+      .post("http://localhost:3019/api/getUserByRole", { role: role }, config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         setdata(response.data);
@@ -235,11 +235,11 @@ function Tables() {
       if (result.isConfirmed) {
         notification.success({ message: "deleted" });
         axios
-          .delete("http://10.10.50.24:3017/api/deleteUser/" + _id, config)
+          .delete("http://localhost:3019/api/deleteUser/" + _id, config)
           .then(function (response) {
             axios
               .post(
-                "http://10.10.50.24:3017/api/getUserByRole",
+                "http://localhost:3019/api/getUserByRole",
                 { role: role },
                 config
               )
@@ -279,10 +279,10 @@ function Tables() {
                     <Radio.Button value="ALL" name="role">
                       ALL
                     </Radio.Button>
-                    <Radio.Button value="makiting" name="role">
+                    <Radio.Button value="markiting" name="role">
                       Marketing
                     </Radio.Button>
-                    <Radio.Button value="analysta" name="role">
+                    <Radio.Button value="analyste" name="role">
                       Analyste
                     </Radio.Button>
                   </Radio.Group>

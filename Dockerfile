@@ -1,7 +1,7 @@
+
+
 FROM node:16.13-alpine
-
 WORKDIR /usr/app/client/
-
 COPY package*.json ./
 EXPOSE 3000
 RUN npm install -f

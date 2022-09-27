@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   Card,
@@ -33,7 +34,7 @@ const AddOrUpdateModalInetview = (props) => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("sign-in");
     }
 
     if (props?.record?.interv) {
@@ -51,11 +52,7 @@ const AddOrUpdateModalInetview = (props) => {
     };
 
     axios
-      .post(
-        "http://10.10.50.24:3017/api/getUserByRole",
-        { role: "ALL" },
-        config
-      )
+      .post("http://localhost:3019/api/getUserByRole", { role: "ALL" }, config)
       .then(function (response) {
         let children = [];
         response.data.forEach((element, i) => {
@@ -94,7 +91,7 @@ const AddOrUpdateModalInetview = (props) => {
     if (props.type === "EDIT") {
       await axios
         .put(
-          "http://10.10.50.24:3017/api/updateEntretien/" + values.id,
+          "http://localhost:3019/api/updateEntretient/" + values.id,
           val,
           config
         )
@@ -108,9 +105,9 @@ const AddOrUpdateModalInetview = (props) => {
           onCancel();
         });
     } else {
-      console.log("tesztttttttttt ", values);
+      console.log("testttttttttt ", values);
       await axios
-        .post("http://10.10.50.24:3017/api/addEntretient", values, config)
+        .post("http://localhost:3019/api/addEntretient", values, config)
         .then(function (response) {
           notification.success({ message: " Done  " });
           props.refetech();
@@ -146,11 +143,11 @@ const AddOrUpdateModalInetview = (props) => {
             <Row justify="space-between" gutter={16}>
               <Col span={12}>
                 <Form.Item
-                  name="date_entretient"
+                  name="Date Interview"
                   rules={[
                     {
                       required: true,
-                      message: "Please input your date_entretient!",
+                      message: "Please input your Date Interview!",
                     },
                   ]}
                 >

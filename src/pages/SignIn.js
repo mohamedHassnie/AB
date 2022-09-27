@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -38,13 +39,7 @@ const SignIn = () => {
       email: email,
       password: password,
     };
-    const config = {
-      headers: {
-        "content-type": "application/json",
-      },
-    };
-
-    await fetch("http://10.10.50.24:3017/api/login", {
+    await fetch("http://localhost:3019/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -73,12 +68,12 @@ const SignIn = () => {
     };
 
     await axios
-      .post("http://10.10.50.24:3017/api/request/password", { email }, config)
+      .post("http://localhost:3019/api/request/password", { email }, config)
       .then((data) => {
         let templateParams = {
           name: "Mr or Mm",
           Email: email,
-          message: `http://10.10.50.24:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
+          message: `http://localhost:3000/profile/ressetpass/${data.data._id}/${data.data.token}`,
         };
 
         emailjs
@@ -102,41 +97,41 @@ const SignIn = () => {
       });
   };
 
-  const handleLogin = async (googleData) => {
-    const config = {
-      headers: {
-        "content-type": "application/json",
-      },
-    };
+  // const handleLogin = async (googleData) => {
+  //   const config = {
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //   };
 
-    console.log("token", googleData.tokenId);
+  //   console.log("token", googleData.tokenId);
 
-    await axios
-      .post(
-        "http://10.10.50.24:3017/api/google-login",
-        { token: googleData.tokenId },
-        config
-      )
-      .then(async (result) => {
-        const data = result.json();
-        await axios
-          .post(
-            "http://10.10.50.24:3017/api/loginGoogle",
-            { email: data.email },
-            config
-          )
-          .then((result) => {
-            localStorage.setItem("user", JSON.stringify(result.data.user));
-            localStorage.setItem("token", JSON.stringify(result.data.token));
-          })
-          .catch(() => {
-            notification.error({ message: "check your Email " });
-          });
-      })
-      .catch(() => {
-        notification.error({ message: "Error Service Google" });
-      });
-  };
+  //   await axios
+  //     .post(
+  //       "http://localhost:3019/api/google-login",
+  //       { token: googleData.tokenId },
+  //       config
+  //     )
+  //     .then(async (result) => {
+  //       const data = result.json();
+  //       await axios
+  //         .post(
+  //           "http://localhost:3019/api/loginGoogle",
+  //           { email: data.email },
+  //           config
+  //         )
+  //         .then((result) => {
+  //           localStorage.setItem("user", JSON.stringify(result.data.user));
+  //           localStorage.setItem("token", JSON.stringify(result.data.token));
+  //         })
+  //         .catch(() => {
+  //           notification.error({ message: "check your Email " });
+  //         });
+  //     })
+  //     .catch(() => {
+  //       notification.error({ message: "Error Service Google" });
+  //     });
+  // };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -222,11 +217,11 @@ const SignIn = () => {
                 >
                   SignUp Patient
                 </Button>
-
+                {/* <a onClick={resetpassword}> Forget password ?</a> */}
                 <Form.Item>
                   <a onClick={resetpassword}> Forget password ?</a>
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                   <GoogleLogin
                     clientId={
                       "913791692427-7op1mas3df4pt1fikad6pli7njalnov2.apps.googleusercontent.com"
@@ -238,7 +233,7 @@ const SignIn = () => {
                     }}
                     cookiePolicy={"single_host_origin"}
                   ></GoogleLogin>
-                </Form.Item>
+                </Form.Item> */}
               </Form>
             </Col>
             <Col

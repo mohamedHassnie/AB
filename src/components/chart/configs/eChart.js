@@ -1,7 +1,4 @@
 const eChart = {
-
-  
-  
   options: {
     chart: {
       type: "bar",
@@ -44,6 +41,7 @@ const eChart = {
         "Aug",
         "Sep",
         "Oct",
+        "Nov",
         "dec",
       ],
       labels: {

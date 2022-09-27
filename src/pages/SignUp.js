@@ -44,10 +44,10 @@ const SignUp = () => {
       };
 
       await axios
-        .post("http://10.10.50.24:3017/api/signUpPatient", data, config)
+        .post("http://localhost:3019/api/signUpPatient", data, config)
         .then((response) => {
           notification.success({ message: response.data.successMessage });
-          his.push("/sign-in");
+          his.push("/Sign-in");
         })
         .catch((err) => {
           notification.error({ message: "check your data " });
@@ -147,7 +147,7 @@ const SignUp = () => {
                 </Col>
               </Row>
               <Row justify="space-between" gutter={16}>
-                <Col span={12}>
+                {/* <Col span={12}>
                   <Form.Item
                     name="phone"
                     rules={[
@@ -163,6 +163,24 @@ const SignUp = () => {
                       }}
                       placeholder="phone"
                       type="phone"
+                    />
+                  </Form.Item>
+                </Col> */}
+                <Col span={12}>
+                  <Form.Item
+                    name="Date_of_birth"
+                    type="date"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Date_of_birth!",
+                      },
+                    ]}
+                  >
+                    <Input
+                      style={{ width: "100%", height: "40px" }}
+                      placeholder="Date_of_birth"
+                      type="date"
                     />
                   </Form.Item>
                 </Col>
@@ -235,7 +253,7 @@ const SignUp = () => {
                     <Select
                       placeholder="Type Analyse"
                       style={{
-                        width: "100%",
+                        width: "461px",
                         height: "40px",
                         border: "1px solid #d9d9d9",
                         borderRadius: "6px",
@@ -246,24 +264,6 @@ const SignUp = () => {
                       <Select.Option value="Spit">Spit</Select.Option>
                       <Select.Option value="Blood">Blood</Select.Option>
                     </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    name="Date_of_birth"
-                    type="date"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your Date_of_birth!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      style={{ width: "100%", height: "40px" }}
-                      placeholder="Date_of_birth"
-                      type="date"
-                    />
                   </Form.Item>
                 </Col>
               </Row>
@@ -341,19 +341,6 @@ const SignUp = () => {
                 </Row>
               </Col>
             </Row>
-          </Col>
-          <Col style={{ height: "30vh", width: "60%" }} span={12}>
-            <GoogleMapReact
-              bootstrapURLKeys={{ key: "" }}
-              defaultCenter={defaultProps.center}
-              defaultZoom={defaultProps.zoom}
-            >
-              <AnyReactComponent
-                lat={59.955413}
-                lng={30.337844}
-                text="My Marker"
-              />
-            </GoogleMapReact>
           </Col>
         </Row>
       </Footer>

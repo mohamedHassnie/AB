@@ -92,7 +92,7 @@ function Interview() {
       width: "20%",
     },
     {
-      title: "interview",
+      title: "interview Avec",
       dataIndex: "interview",
       key: "interview",
       render: (val) => {
@@ -105,7 +105,7 @@ function Interview() {
       width: "20%",
     },
     {
-      title: "interv",
+      title: "E-mail",
       dataIndex: "interv",
       render: (val, record) => {
         return (
@@ -132,6 +132,7 @@ function Interview() {
               onClick={(e) => {
                 setrecord(record);
                 setvisibleInE(true);
+                handleUpdate(row._id);
               }}
             >
               Edit
@@ -153,11 +154,11 @@ function Interview() {
   };
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("");
     }
 
     axios
-      .get("http://10.10.50.24:3017/api/getEntretient", config)
+      .get("http://localhost:3019/api/getEntretient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -168,7 +169,17 @@ function Interview() {
 
   const handleDelete = async (id) => {
     await axios
-      .get("http://10.10.50.24:3017/api/deleteEntretient/" + id, config)
+      .get("http://localhost:3019/api/deleteEntretient/" + id, config)
+      .then(function (response) {
+        handrefetech();
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  };
+  const handleUpdate = async (id) => {
+    await axios
+      .get("http://localhost:3019/api/updateEntretient/" + id, config)
       .then(function (response) {
         handrefetech();
       })

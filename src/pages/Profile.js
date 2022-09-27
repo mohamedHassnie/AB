@@ -78,7 +78,7 @@ function Profile() {
 
     axios
       .put(
-        "http://10.10.50.24:3017/api/UpdateUser/" + user.id,
+        "http://localhost:3019/api/UpdateUser/" + user.id,
         {
           UserName: values.UserName,
           LastName: values.LastName,
@@ -291,7 +291,7 @@ function Profile() {
 
                           axios({
                             method: "post",
-                            url: "http://10.10.50.24:3017/api/upload",
+                            url: "http://localhost:3019/api/upload",
                             data: bodyFormData,
                             headers: { "Content-Type": "multipart/form-data" },
                           })

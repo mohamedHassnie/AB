@@ -103,7 +103,7 @@ export default function Vocation() {
 
     axios
       .post(
-        "http://10.10.50.24:3017/api/vacation",
+        "http://localhost:3019/api/vacation",
         {
           startingDate: values.startdate,
           endingDate: values.enddate,
@@ -123,7 +123,7 @@ export default function Vocation() {
   };
   useEffect(() => {
     axios
-      .get("http://10.10.50.24:3017/api/historiqueVaccation", config)
+      .get("http://localhost:3019/api/historiqueVaccation", config)
       .then((reponse) => {
         if (reponse) {
           sethist(reponse.data.data);
@@ -154,9 +154,7 @@ export default function Vocation() {
                 <Select.Option value="normale">Normal</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item label="Facultative" name="facultative">
-              <TextArea rows={4} />
-            </Form.Item>
+
             <Row>
               <Button
                 type="primary"

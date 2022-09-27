@@ -36,14 +36,14 @@ function RestPassword() {
     };
     await axios
       .put(
-        "http://10.10.50.24:3017/api/updatepass/" + id,
+        "http://localhost:3019/api/updatepass/" + id,
         { password: newpassword, token },
         config
       )
       .then((data) => {
         notification.success({ message: "Done" });
         localStorage.clear();
-        hist.push("/sign-in");
+        hist.push("");
       })
       .catch((error) => {
         console.log(error);

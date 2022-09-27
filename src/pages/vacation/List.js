@@ -196,7 +196,7 @@ const List = () => {
       newStatus: status,
     };
     await axios
-      .put(`http://10.10.50.24:3017/api/UpdateEtatAdmin/` + id, data)
+      .put(`http://localhost:3019/api/UpdateEtatAdmin/` + id, data)
       .then((res) => {
         setreload(true);
         handleSearch();
@@ -206,7 +206,7 @@ const List = () => {
 
   const handleSearch = async () => {
     await axios
-      .get(`http://10.10.50.24:3017/api/listVacation`, config)
+      .get(`http://localhost:3019/api/listVacation`, config)
       .then((resultat) => {
         if (resultat) {
           setData(resultat.data.vacations);

@@ -163,11 +163,11 @@ function Tablepatient() {
   };
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("");
     }
 
     axios
-      .get("http://10.10.50.24:3017/api/getPatient", config)
+      .get("http://localhost:3019/api/getPatient", config)
       .then((res) => {
         setdata(res.data);
       })
@@ -178,7 +178,7 @@ function Tablepatient() {
 
   const handleDelete = async (id) => {
     await axios
-      .delete(`http://10.10.50.24:3017/api/deletePatient/${id}`, config)
+      .delete(`http://localhost:3019/api/deletePatient/${id}`, config)
       .then(function (response) {
         handrefetech();
       })
@@ -190,7 +190,7 @@ function Tablepatient() {
   const handleSearch = async () => {
     setLoading(true);
     let resultat = await fetch(
-      `http://10.10.50.24:3017/api/searchPatient/${key ? key : "all"}`,
+      `http://localhost:3019/api/searchPatient/${key ? key : "all"}`,
       config
     );
 

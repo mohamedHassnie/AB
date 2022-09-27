@@ -26,7 +26,7 @@ function Main({ children }) {
       className={`layout-dashboard ${
         pathname === "profile" ? "layout-profile" : ""
       } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
-      style={{zIndex:4}}
+      style={{ zIndex: 4 }}
     >
       <Drawer
         title={false}
@@ -35,7 +35,7 @@ function Main({ children }) {
         onClose={() => setVisible(false)}
         visible={visible}
         key={placement === "right" ? "left" : "right"}
-        width={250}
+        width={300}
         className={`drawer-sidebar ${
           pathname === "rtl" ? "drawer-sidebar-rtl" : ""
         } `}
@@ -65,7 +65,7 @@ function Main({ children }) {
           console.log(collapsed, type);
         }}
         trigger={null}
-        width={250}
+        width={280}
         theme="light"
         className={`sider-primary ant-layout-sider-primary ${
           sidenavType === "#fff" ? "active-route" : ""

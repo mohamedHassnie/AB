@@ -4,10 +4,10 @@ function bi() {
   return (
     <div>
       <iframe
-        title="v3"
-        width="1300"
-        height="800.25"
-        src="https://app.powerbi.com/reportEmbed?reportId=f9115bd3-a176-47f0-ab8f-24baa444bfe1&autoAuth=true&ctid=72d7e4db-2900-41ad-9012-4eb3e3938a17&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLXNvdXRoLWFmcmljYS1ub3J0aC1hLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D"
+        title="v4 - variation génétique"
+        width="1400"
+        height="750.25"
+        src="https://app.powerbi.com/reportEmbed?reportId=011e26e6-c3b1-4c96-97c3-57c7d52564c9&autoAuth=true&ctid=62d6075f-6d3d-4fc4-acef-24e4dc38ae2a"
         frameborder="0"
         allowFullScreen="true"
       ></iframe>

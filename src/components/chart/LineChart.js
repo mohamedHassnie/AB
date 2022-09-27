@@ -21,7 +21,7 @@ function LineChart() {
     };
 
     await axios
-      .get("http://10.10.50.24:3017/api/analysta", config)
+      .get("http://localhost:3019/api/Patient", config)
       .then((response) => {
         setdatAl(Object.values(response.data.months[0]));
       })
@@ -30,7 +30,7 @@ function LineChart() {
       });
 
     await axios
-      .get("http://10.10.50.24:3017/api/markiting", config)
+      .get("http://localhost:3019/api/Patient", config)
       .then((response) => {
         setdataMar(Object.values(response.data.months[0]));
       })
@@ -45,12 +45,12 @@ function LineChart() {
 
   const series = [
     {
-      name: "Analyse",
+      name: "Patient",
       data: dataAl,
       offsetY: 0,
     },
     {
-      name: "Markiting",
+      name: "Patient",
       data: dataMar,
       offsetY: 0,
     },
@@ -60,12 +60,12 @@ function LineChart() {
     <>
       <div className="linechart">
         <div>
-          <Title level={5}>Active Users</Title>
+          <Title level={5}>Patient_Variation</Title>
         </div>
         <div className="sales">
           <ul>
-            <li>{<MinusOutlined />} Analyse</li>
-            <li>{<MinusOutlined />} Markiting</li>
+            <li>{<MinusOutlined />} Patient</li>
+            {/* <li>{<MinusOutlined />} Markiting</li> */}
           </ul>
         </div>
       </div>

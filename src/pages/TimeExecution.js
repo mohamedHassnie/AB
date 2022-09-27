@@ -12,9 +12,9 @@ const CountFile = () => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("");
     }
-    axios.get("http://10.10.50.24:3017/api/getCount").then((reponse) => {
+    axios.get("http://localhost:3019/api/getCount").then((reponse) => {
       // console.log("hhh", reponse);
       // console.log("ttt", reponse.data);
       if (reponse) {

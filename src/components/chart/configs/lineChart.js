@@ -1,6 +1,4 @@
 const lineChart = {
- 
-
   options: {
     chart: {
       width: "100%",
@@ -47,6 +45,9 @@ const lineChart = {
             "#8c8c8c",
             "#8c8c8c",
             "#8c8c8c",
+            "#8c8c8c",
+            "#8c8c8c",
+            "#8c8c8c",
           ],
         },
       },
@@ -61,6 +62,7 @@ const lineChart = {
         "Aug",
         "Sep",
         "Oct",
+        "Nov",
         "dec",
       ],
     },

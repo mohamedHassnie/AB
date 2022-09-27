@@ -46,7 +46,7 @@ function CountFile() {
       },
     };
     axios
-      .post("http://10.10.50.24:3017/api/analyse", formData, config)
+      .post("http://localhost:3019/api/analyse", formData, config)
       .then((res) => {
         console.log(res);
         alert(res.data.message);
@@ -55,7 +55,7 @@ function CountFile() {
   };
 
   useEffect(() => {
-    axios.get("http://10.10.50.24:3017/api/getCount").then((reponse) => {
+    axios.get("http://localhost:3019/api/getCount").then((reponse) => {
       console.log("hhh", reponse);
       console.log("ttt", reponse.data);
       if (reponse) {
@@ -74,7 +74,7 @@ function CountFile() {
   return (
     <Card
       style={{ textAlign: "center" }}
-      title={<Typography.Title level={2}>Upload a file</Typography.Title>}
+      title={<Typography.Title level={2}>Upload a files</Typography.Title>}
       type="inner"
     >
       <Card className="wrapper">
@@ -101,11 +101,29 @@ function CountFile() {
 
         <Row justify="center">
           <Space size="middle">
-            <Button type="default" onClick={reset}>
-              reset
+            <Button
+              onClick={reset}
+              style={{
+                backgroundColor: "red",
+                width: "140px",
+                Color: "white",
+                height: "55px",
+              }}
+            >
+              Reset
             </Button>
-            <Button type="primary" onClick={handleSubmit}>
-              submit
+            <br />
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              style={{
+                backroundColor: "yellow",
+                width: "140px",
+                color: "white",
+                height: "55px",
+              }}
+            >
+              Submit
             </Button>
           </Space>
         </Row>
@@ -115,14 +133,14 @@ function CountFile() {
         <Alert
           message=" VCF "
           description={
-            "nombre de fichier stockée dans le serveur  : " + state.countFileVCF
+            "number of files stored in the server : " + state.countFileVCF
           }
           type="success"
         />
         <Alert
           message="CSV"
           description={
-            "nombre de fichier stockée dans le serveur  : " + state.countfileCSV
+            "number of files stored in the server : " + state.countfileCSV
           }
           type="info"
         />

@@ -25,7 +25,7 @@ const AddOrUpdateModal = (props) => {
     if (!isAuthenticated()) {
       hist.push("/sign-in");
     }
-    console.log("teswttt", props.record);
+    console.log("testtt", props.record);
 
     form.setFieldsValue({ ...props.record, password: "" });
   }, [form, props.record, props.visible]);
@@ -44,7 +44,7 @@ const AddOrUpdateModal = (props) => {
       const values = { ...val, role: form.getFieldValue("role") };
 
       await axios
-        .post("http://10.10.50.24:3017/api/addUser", values, config)
+        .post("http://localhost:3019/api/addUser", values, config)
         .then((response) => {
           notification.success({ message: "User added" });
 
@@ -65,7 +65,7 @@ const AddOrUpdateModal = (props) => {
 
       await axios
         .put(
-          "http://10.10.50.24:3017/api/UpdateUser/" + values._id,
+          "http://localhost:3019/api/UpdateUser/" + values._id,
           values,
           config
         )
@@ -136,8 +136,8 @@ const AddOrUpdateModal = (props) => {
                   >
                     choissez_role
                   </Option>
-                  <Option value="makiting">Marketing</Option>
-                  <Option value="analysta">Analyste</Option>
+                  <Option value="markiting">Marketing</Option>
+                  <Option value="analyste">Analyste</Option>
                 </Select>
               )}
             </Form.Item>

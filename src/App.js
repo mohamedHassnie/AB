@@ -15,24 +15,14 @@ import "./assets/styles/main.css";
 import "./assets/styles/responsive.css";
 import RestPassword from "./pages/RestPassword";
 import vacation from "./pages/vacation/Vocation";
-import configVacation from "./pages/vacation/configVacation";
 import mail from "./pages/masse_mailing/mail";
 import React, { useState } from "react";
 import { Footer } from "antd/lib/layout/layout";
 import { Col, Image, Row, Space, Typography } from "antd";
 import logo from "./assets/images/ooo.png";
-import GoogleMapReact from "google-map-react";
+
 import bi from "./pages/visualisation/bi";
 function App() {
-  const defaultProps = {
-    center: {
-      lat: 10.99835602,
-      lng: 77.01502627,
-    },
-    zoom: 11,
-  };
-
-  const AnyReactComponent = ({ text }) => <div>{text}</div>;
   return (
     <div className="App">
       <Switch>
@@ -43,6 +33,7 @@ function App() {
           path="/profile/ressetpass/:id/:token"
           component={RestPassword}
         />
+
         <>
           <Main>
             <Route exact path="/dashboard" component={Home} />
@@ -50,12 +41,10 @@ function App() {
             <Route exact path="/Tablepatient" component={Tablepatient} />
             <Route exact path="/Interview" component={Interview} />
             <Route exact path="/profile" component={Profile} />
-
             <Route exact path="/add_file" component={add_file} />
             <Route exact path="/vacation" component={vacation} />
-
             <Route exact path="/listVacation" component={listVacation} />
-            <Route exact path="/configVacation" component={configVacation} />
+
             <Route exact path="/mail" component={mail} />
             <Route exact path="/analyse" component={bi} />
           </Main>
@@ -76,7 +65,6 @@ function App() {
                 <Row gutter={64}>
                   <Col span={12}>
                     <Row>
-                      {" "}
                       <Typography.Text underline italic>
                         Contact us with Email:
                       </Typography.Text>{" "}
@@ -99,7 +87,7 @@ function App() {
                     <Row>
                       <Typography.Text underline italic>
                         Contact us with Phone:
-                      </Typography.Text>{" "}
+                      </Typography.Text>
                     </Row>
                     <Row>
                       <Typography.Text strong>+216 58 913 468</Typography.Text>
@@ -112,7 +100,7 @@ function App() {
                 </Row>
               </Col>
               <Col style={{ height: "30vh", width: "60%" }} span={12}>
-                <GoogleMapReact
+                {/* <GoogleMapReact
                   bootstrapURLKeys={{ key: "" }}
                   defaultCenter={defaultProps.center}
                   defaultZoom={defaultProps.zoom}
@@ -122,7 +110,7 @@ function App() {
                     lng={30.337844}
                     text="My Marker"
                   />
-                </GoogleMapReact>
+                </GoogleMapReact> */}
               </Col>
             </Row>
           </Footer>

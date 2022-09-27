@@ -25,7 +25,7 @@ const Mail = () => {
 
   useEffect(() => {
     if (!isAuthenticated()) {
-      hist.push("/sign-in");
+      hist.push("");
     }
 
     const config = {
@@ -36,7 +36,7 @@ const Mail = () => {
     };
 
     axios
-      .get("http://10.10.50.24:3017/api/getAllMails", config)
+      .get("http://localhost:3019/api/getAllMails", config)
       .then(function (response) {
         console.log("eeeeeeee", response);
         let children = [];

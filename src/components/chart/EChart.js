@@ -19,7 +19,7 @@ function EChart() {
     };
 
     await axios
-      .get("http://10.10.50.24:3017/api/activeUser", data, config)
+      .get("http://localhost:3019/api/activeUser", data, config)
       .then((response) => {
         setdata(Object.values(response.data.months[0]));
       })
@@ -31,25 +31,6 @@ function EChart() {
   useEffect(() => {
     getDatas();
   }, []);
-
-  const items = [
-    {
-      Title: "3,6K",
-      user: "Users",
-    },
-    {
-      Title: "2m",
-      user: "Clicks",
-    },
-    {
-      Title: "3m",
-      user: "Analyze",
-    },
-    {
-      Title: "82",
-      user: "Items",
-    },
-  ];
 
   const toto = [
     {
@@ -71,17 +52,18 @@ function EChart() {
         />
       </div>
       <div className="chart-vistior">
-        <Title level={5}>Active Users</Title>
+        <Title level={5}>Count Users</Title>
 
-        {/* <Paragraph className="lastweek">
-          ************* <span className="bnb2">+30%</span>
-        </Paragraph>
         <Paragraph className="lastweek">
+          <br />
+          <span className="bnb2"> Analyste *** Markéting </span>
+        </Paragraph>
+        {/* <Paragraph className="lastweek">
           ******************************************************
           *****************************************************
         </Paragraph> */}
 
-        <Row gutter>
+        {/* <Row gutter>
           {items.map((v, index) => (
             <Col xs={6} xl={6} sm={6} md={6} key={index}>
               <div className="chart-visitor-count">
@@ -90,7 +72,7 @@ function EChart() {
               </div>
             </Col>
           ))}
-        </Row>
+        </Row> */}
       </div>
     </>
   );
